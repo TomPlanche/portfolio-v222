@@ -21,8 +21,7 @@
 		<p>
 			I'm a {age} years old French software engineer and CS student at <a href="https://www.cnam.fr/" target="_blank"
 			                                                                    rel="noopener noreferrer">CNAM</a>, based in
-			Paris. <br>
-			Rust enthusiast, I enjoy building CLI tools and web apps from Git workflow automation to interactive frontends.
+			Paris. Rust enthusiast, I enjoy building CLI tools and web apps from Git workflow automation to interactive frontends.
 			Currently working at <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
 			previously at <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>.
 		</p>
@@ -47,7 +46,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        column-gap: 2rem;
+        column-gap: 4rem;
 
         width: 100%;
 
@@ -69,9 +68,14 @@
       }
 
       p {
+        font-family: "PP Cirka", monospace;
         font-size: 1.5rem;
-        line-height: 1.8;
-        text-align: justify;
+
+        line-height: 1.5;
+        text-align: left;
+        text-wrap: pretty;
+
+        padding-right: 4rem;
 
         a {
           color: inherit;

@@ -68,7 +68,7 @@
       }
 
       p {
-        font-family: "PP Cirka", monospace;
+        font-family: "Supply Mono", monospace;
         font-size: 1.5rem;
 
         line-height: 1.5;

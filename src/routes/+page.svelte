@@ -89,6 +89,10 @@
       }
     }
 
+    &:not(#intro) {
+      padding-top: 3rem;
+    }
+
     h1 {
       font-family: "PP Mondwest", monospace;
       font-size: 6rem;

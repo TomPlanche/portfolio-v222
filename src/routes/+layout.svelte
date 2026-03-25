@@ -21,7 +21,7 @@
 
 <style>
     main {
-        padding: 2rem 10vmin;
+        padding: 2rem 4vmin;
     }
 
     #noise {

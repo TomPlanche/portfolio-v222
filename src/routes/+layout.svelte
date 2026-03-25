@@ -2,6 +2,7 @@
 	import '$lib/styles/main.scss';
 
 	import favicon from '$lib/assets/favicon.svg';
+	import PixelReveal from '$lib/components/PixelReveal.svelte';
 
 	let { children } = $props();
 </script>
@@ -10,6 +11,7 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+<PixelReveal />
 <div id="noise"></div>
 
 <main>

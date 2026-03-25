@@ -1,0 +1,289 @@
+/**
+ * COLORS
+ */
+$rust-deep-blue: #1E2650;
+
+/**
+ * Mixins
+ */
+@mixin no-user-select() {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+/**
+ * Fonts
+ */
+// Departure Monogi
+@font-face {
+  font-family: "Departure Mono";
+  src: url("/fonts/DepartureMono/DepartureMono-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Mondwest
+@font-face {
+  font-family: "PP Mondwest";
+  src: url("/fonts/PPMondwest/PPMondwest-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PP Mondwest";
+  src: url("/fonts/PPMondwest/PPMondwest-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Supply Mono
+@font-face {
+  font-family: "Supply Mono";
+  src: url("/fonts/PPSupplyMono/PPSupplyMono-Ultralight.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Supply Mono";
+  src: url("/fonts/PPSupplyMono/PPSupplyMono-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Supply Mono";
+  src: url("/fonts/PPSupplyMono/PPSupplyMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Supply Mono";
+  src: url("/fonts/PPSupplyMono/PPSupplyMono-Bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
+// iA Writer Duo
+@font-face {
+  font-family: "iA Writer Duo";
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Regular.eot");
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Regular.woff2") format("woff2"),
+  url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "iA Writer Duo";
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Italic.eot");
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Italic.woff2") format("woff2"),
+  url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "iA Writer Duo";
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Bold.eot");
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Bold.woff2") format("woff2"),
+  url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "iA Writer Duo";
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-BoldItalic.eot");
+  src: url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-BoldItalic.woff2") format("woff2"),
+  url("/fonts/iAWriterDuo/Webfonts/iAWriterDuoS-BoldItalic.woff") format("woff");
+  font-weight: bold;
+  font-style: italic;
+}
+
+// Monorama
+@font-face {
+  font-family: "Monorama";
+  src: url("/fonts/Monorama/Monorama-Regular.eot");
+  src: url("/fonts/Monorama/Monorama-Regular.woff2") format("woff2"),
+  url("/fonts/Monorama/Monorama-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monorama";
+  src: url("/fonts/Monorama/Monorama-Medium.eot");
+  src: url("/fonts/Monorama/Monorama-Medium.woff2") format("woff2"),
+  url("/fonts/Monorama/Monorama-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monorama";
+  src: url("/fonts/Monorama/Monorama-SemiBold.eot");
+  src: url("/fonts/Monorama/Monorama-SemiBold.woff2") format("woff2"),
+  url("/fonts/Monorama/Monorama-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Monorama";
+  src: url("/fonts/Monorama/Monorama-Bold.eot");
+  src: url("/fonts/Monorama/Monorama-Bold.woff2") format("woff2"),
+  url("/fonts/Monorama/Monorama-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+// FK Raster Grotesk
+@font-face {
+  font-family: "FK Raster Grotesk Compact Blended";
+  src: url("/fonts/FK Raster Grotesk/FKRasterGroteskCompactTrial-Blended.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FK Raster Grotesk Blended";
+  src: url("/fonts/FK Raster Grotesk/FKRasterGroteskTrial-Blended.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Zed Plex Mono
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-ThinItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-ExtraLightItalic.ttf") format("truetype");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Text.ttf") format("truetype");
+  font-weight: 450;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-TextItalic.ttf") format("truetype");
+  font-weight: 450;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-SemiBoldItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zed Plex Mono";
+  src: url("/fonts/zed-plex/ZedPlexMono-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+// Intranet
+@font-face {
+  font-family: "Intranet";
+  src: url("/fonts/Intranet/IntraNet.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Intranet Outline";
+  src: url("/fonts/Intranet/IntraNet_Outline.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

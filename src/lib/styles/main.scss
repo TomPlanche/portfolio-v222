@@ -1,0 +1,27 @@
+@use "reset";
+@use "variables";
+@use "base";
+
+:root {
+  --text-color: #eceadf;
+
+
+  --rust-blue: #28607F;
+  --rust-dark-blue: #1E2650;
+  --rust-green: #61784D;
+  --rust-orange: #D34516;
+  --rust-silver: #67737A;
+
+  --zed-blue: #1348DC; // picked from https://zed.dev/brand
+  --zed-blue-text: oklch(80.9% .105 251.813); // picked from their website, not sure if it's correct
+  --zed-dark: #121316; // picked from their website, not sure if it's correct
+}
+
+body {
+  color: var(--zed-blue-text);
+  background: var(--zed-dark);
+
+  transition: rust-dark-blue 0.1s ease-in-out;
+
+  //@include variables.no-user-select();
+}

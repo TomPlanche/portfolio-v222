@@ -1,0 +1,62 @@
+
+html {
+  font-size: 100%;
+}
+
+//.link {
+//  display: inline-block;
+//  position: relative;
+//  cursor: pointer;
+//
+//  &:after {
+//    content: '';
+//    position: absolute;
+//    width: 100%;
+//    transform: scaleX(0);
+//    height: 2px;
+//    bottom: 0;
+//    left: 0;
+//    background-color: var(--text-color);
+//    transform-origin: bottom right;
+//    transition: transform 0.25s ease-out;
+//
+//    z-index: 444;
+//  }
+//
+//  &:hover:after {
+//    transform: scaleX(1);
+//    transform-origin: bottom left;
+//  }
+//}
+$base-font-size: 16px;
+$font-size-multiplier: 1.5vw;
+
+body {
+  font-size: calc(#{$base-font-size} + #{$font-size-multiplier});
+  margin: 0;
+
+
+  height: 100%;
+  overflow: auto;
+
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+}
+
+* {
+  text-align: center;
+
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+
+}
+
+// RESPONSIVE ------------------------------------------------------------------
+@for $i from 0 through 15 {
+  @media screen and (max-width: 1440px - (80 * $i)) {
+    html {
+      font-size: 100% - calc(3% * $i);
+    }
+  }
+}

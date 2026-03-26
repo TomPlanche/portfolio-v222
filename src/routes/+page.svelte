@@ -1,4 +1,18 @@
 <script lang="ts">
+	import projectsData from '$lib/projects.json';
+	import Globe from '$lib/components/Globe.svelte';
+
+	type Project = {
+		name: string;
+		role: 'author' | 'contributor';
+		url: string;
+		description: string;
+		language: string;
+		medium?: string;
+	};
+
+	const projects: Project[] = projectsData;
+
 	// Calculate years since 6 march 2002
 	const age = Math.floor((Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 </script>
@@ -26,6 +40,36 @@
 			previously at <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>.
 		</p>
 	</div>
+</section>
+
+<section id="projects">
+	<h2>Projects</h2>
+
+	<ul class="projects-list">
+		{#each projects as project (project.name)}
+			<li class="project-item">
+				<a href={project.url} target="_blank" rel="noopener noreferrer">
+					<div class="project-header">
+						<span class="project-name">{project.name}</span>
+						<span class="project-tags">
+							<span class="tag">{project.language}</span>
+							<span class="tag tag--role">{project.role}</span>
+						</span>
+					</div>
+					<p class="project-description">{project.description}</p>
+					{#if project.medium}
+						<div class="project-media">
+							{#if project.medium === 'globe'}
+								<Globe />
+							{:else}
+								<img src={project.medium} alt="{project.name} preview" />
+							{/if}
+						</div>
+					{/if}
+				</a>
+			</li>
+		{/each}
+	</ul>
 </section>
 
 <style lang="scss">
@@ -93,6 +137,99 @@
       }
     }
 
+    &#projects {
+      .projects-list {
+        list-style: none;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (min-width: 1200px) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .project-item {
+        a {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          padding: 1.25rem;
+          border: 1px dotted currentColor;
+          color: inherit;
+          text-decoration: none;
+          opacity: 0.8;
+          transition: opacity 0.15s ease, border-style 0.15s ease;
+          height: 100%;
+
+          &:hover {
+            opacity: 1;
+            border-style: solid;
+          }
+        }
+      }
+
+      .project-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .project-name {
+        font-family: "monocraft", monospace;
+        font-size: 1.1rem;
+      }
+
+      .project-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+
+      .tag {
+        font-family: "Supply Mono", monospace;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.4rem;
+        border: 1px dotted currentColor;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+
+        &--role {
+          opacity: 0.6;
+        }
+      }
+
+      .project-description {
+        font-family: "Supply Mono", monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        text-wrap: pretty;
+        opacity: 0.7;
+        margin: 0;
+      }
+
+      .project-media {
+        margin-top: auto;
+        padding-top: 0.75rem;
+        border-top: 1px dotted currentColor;
+        opacity: 0.6;
+
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+      }
+    }
+
     &:not(#intro) {
       padding-top: 3rem;
     }
@@ -121,6 +258,10 @@
         border-top: 3px dotted currentColor;
         opacity: 0.5;
       }
+    }
+
+    > div, > ul {
+      padding: 4rem 2rem;
     }
   }
 </style>

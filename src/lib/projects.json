@@ -27,7 +27,8 @@
 		"role": "contributor",
 		"url": "https://github.com/shuding/cobe",
 		"description": "5kB WebGL globe lib.",
-		"language": "TypeScript"
+		"language": "TypeScript",
+		"medium": "globe"
 	},
 	{
 		"name": "chess-tui",
@@ -35,6 +36,6 @@
 		"url": "https://github.com/thomas-mauran/chess-tui",
 		"description": "Play chess from your terminal.",
 		"language": "Rust",
-		"medium": "https://github.com/thomas-mauran/chess-tui/raw/main/examples/ratatui.gif"
+		"medium": "/chess-tui.gif"
 	}
 ]

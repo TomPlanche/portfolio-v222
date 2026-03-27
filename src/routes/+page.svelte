@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import projectsData from '$lib/projects.json';
 	import Globe from '$lib/components/Globe.svelte';
+	import { geolocation } from '$lib/geolocation.svelte';
 
 	type Project = {
 		name: string;
@@ -15,6 +17,16 @@
 
 	// Calculate years since 6 march 2002
 	const age = Math.floor((Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+
+	onMount(() => {
+		geolocation.request();
+	});
+
+	$effect(() => {
+		if (geolocation.coords) {
+			console.log('Location found:', geolocation.coords.latitude, geolocation.coords.longitude);
+		}
+	});
 </script>
 
 <section id="intro">
@@ -52,7 +64,7 @@
 					<div class="project-header">
 						<span class="project-name">{project.name}</span>
 						<span class="project-tags">
-							<span class="tag">{project.language}</span>
+							<span class="tag" style={project.language === 'Rust' ? 'color: #CE422B; border-color: #CE422B;' : project.language === 'TypeScript' ? 'color: #3178C6; border-color: #3178C6;' : ''}>{project.language}</span>
 							<span class="tag tag--role">{project.role}</span>
 						</span>
 					</div>
@@ -60,7 +72,8 @@
 					{#if project.medium}
 						<div class="project-media">
 							{#if project.medium === 'globe'}
-								<Globe />
+								<Globe
+									userLocation={geolocation.coords ? [geolocation.coords.latitude, geolocation.coords.longitude] : null} />
 							{:else}
 								<img src={project.medium} alt="{project.name} preview" />
 							{/if}
@@ -196,7 +209,7 @@
       .tag {
         font-family: "Supply Mono", monospace;
         font-size: 0.7rem;
-        padding: 0.15rem 0.4rem;
+        padding: 0.25rem 0.4rem 0.15rem;
         border: 1px dotted currentColor;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -204,6 +217,7 @@
         &--role {
           opacity: 0.6;
         }
+
       }
 
       .project-description {
@@ -211,6 +225,7 @@
         font-size: 0.9rem;
         line-height: 1.5;
         text-wrap: pretty;
+        text-align: left;
         opacity: 0.7;
         margin: 0;
       }

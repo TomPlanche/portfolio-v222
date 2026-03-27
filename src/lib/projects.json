@@ -11,13 +11,13 @@
 		"name": "rona",
 		"role": "author",
 		"url": "https://github.com/rona-rs/rona",
-		"description": "A powerful CLI tool to streamline your Git workflow.",
+		"description": "A Rust CLI that streamlines your Git workflow by combining staging, commit generation, and push into a cohesive set of ergonomic commands. It supports structured commit messages with customizable templates, smart file exclusion patterns, and branch sync ; all configurable per-project.",
 		"language": "Rust"
 	},
 	{
 		"name": "zed",
 		"role": "contributor",
-		"url": "https://github.com/zed-industries/zed",
+		"url": "https://github.com/zed-industries/zed/pulls?q=is%3Apr%20author%3ATomPlanche",
 		"description": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
 		"language": "Rust",
 		"medium": "https://zed.dev/img/homepage/posters/debugger.webp"
@@ -25,7 +25,7 @@
 	{
 		"name": "cobe",
 		"role": "contributor",
-		"url": "https://github.com/shuding/cobe",
+		"url": "https://github.com/shuding/cobe/pulls?q=is%3Apr%20author%3ATomPlanche",
 		"description": "5kB WebGL globe lib.",
 		"language": "TypeScript",
 		"medium": "globe"
@@ -33,7 +33,7 @@
 	{
 		"name": "chess-tui",
 		"role": "contributor",
-		"url": "https://github.com/thomas-mauran/chess-tui",
+		"url": "https://github.com/thomas-mauran/chess-tui/pulls?q=is%3Apr%20author%3ATomPlanche",
 		"description": "Play chess from your terminal.",
 		"language": "Rust",
 		"medium": "/chess-tui.gif"

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import projectsData from '$lib/projects.json';
 	import Globe from '$lib/components/Globe.svelte';
+	import ImageReveal from '$lib/components/ImageReveal.svelte';
 	import { geolocation } from '$lib/geolocation.svelte';
 
 	type Project = {
@@ -17,6 +18,23 @@
 
 	// Calculate years since 6 March 2002
 	const age = Math.floor((Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+
+	type Links = {
+		href: string;
+		name: string;
+	}
+	const headerLinks: Links[] = [{
+		href: 'https://github.com/tomplanche',
+		name: 'GitHub'
+	}, {
+		href: 'https://www.linkedin.com/in/tomplanche/',
+		name: 'LinkedIn'
+	}, {
+
+		href: 'https://api.tomplanche.com/static/CV_PLANCHE-TOM_2026.pdf/',
+		name: 'Resume'
+	}
+	];
 
 	onMount(() => {
 		geolocation.request();
@@ -34,7 +52,7 @@
 </section>
 
 <section id="about">
-	<h2>About</h2>
+	<h2>About.</h2>
 
 	<div class="about-content">
 		<pre>
@@ -55,7 +73,7 @@
 </section>
 
 <section id="projects">
-	<h2>Projects</h2>
+	<h2>Projects.</h2>
 
 	<ul class="projects-list">
 		{#each projects as project (project.name)}
@@ -72,10 +90,14 @@
 					{#if project.medium}
 						<div class="project-media">
 							{#if project.medium === 'globe'}
-								<Globe
-									userLocation={geolocation.coords ? [geolocation.coords.latitude, geolocation.coords.longitude] : null} />
+								<ImageReveal>
+									<Globe
+										userLocation={geolocation.coords ? [geolocation.coords.latitude, geolocation.coords.longitude] : null} />
+								</ImageReveal>
 							{:else}
-								<img src={project.medium} alt="{project.name} preview" />
+								<ImageReveal>
+									<img src={project.medium} alt="{project.name} preview" />
+								</ImageReveal>
 							{/if}
 						</div>
 					{/if}
@@ -102,15 +124,10 @@
       .about-content {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         column-gap: 4rem;
 
         width: 100%;
-
-        @media (min-width: 768px) {
-          flex-direction: row;
-          align-items: center;
-        }
       }
 
       pre {
@@ -118,10 +135,6 @@
         font-family: "monocraft", monospace;
 
         text-align: left;
-
-        @media (max-width: 786px) {
-          align-self: center;
-        }
       }
 
       p {
@@ -157,14 +170,6 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 1.5rem;
-
-        @media (min-width: 768px) {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (min-width: 1200px) {
-          grid-template-columns: repeat(3, 1fr);
-        }
       }
 
       .project-item {
@@ -244,6 +249,13 @@
       }
     }
 
+    &#intro {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 2rem;
+    }
+
     &:not(#intro) {
       padding-top: 3rem;
     }
@@ -253,13 +265,15 @@
       font-size: 6rem;
     }
 
+
     h2 {
-      font-family: "PP Mondwest", monospace;
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      opacity: 0.8;
+      font-family: "FK Raster Grotesk Compact Blended", monospace;
+      //font-size: 3rem;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      opacity: 0.9;
       text-align: left;
       width: 100%;
       display: flex;
@@ -276,6 +290,41 @@
 
     > div, > ul {
       padding: 4rem 2rem;
+    }
+
+    @media (max-width: 767px) {
+      > div, > ul {
+        padding: 2rem 0;
+      }
+
+      &#about {
+        pre {
+          align-self: center;
+        }
+
+        p {
+          text-align: center;
+          text-wrap: balance;
+          padding: 0;
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      &#about .about-content {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      &#projects .projects-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1200px) {
+      &#projects .projects-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
   }
 </style>

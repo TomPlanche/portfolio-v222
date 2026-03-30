@@ -1,12 +1,12 @@
 <script lang="ts">
+	import { pageReveal } from '$lib/pageReveal.svelte';
+
 	const PIXEL_SIZE = 24;
 	const DURATION = 1400;
 	const FLASH_WINDOW = 120;
 	const NOISE_RANGE = 300; // ms of random jitter around the sweep line
 	const ZED_DARK = '#121316';
 	const ZED_BLUE = 'oklch(80.9% .105 251.813)';
-
-	let done = $state(false);
 
 	/**
 	 * Attachment that runs the pixel dissolve animation on the canvas element.
@@ -84,7 +84,7 @@
 			if (elapsed < DURATION + FLASH_WINDOW) {
 				rafId = requestAnimationFrame(frame);
 			} else {
-				done = true;
+				pageReveal.complete();
 			}
 		};
 
@@ -94,7 +94,7 @@
 	};
 </script>
 
-{#if !done}
+{#if !pageReveal.done}
 	<canvas {@attach reveal}></canvas>
 {/if}
 

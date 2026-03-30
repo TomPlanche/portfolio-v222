@@ -34,7 +34,7 @@
 		"name": "chess-tui",
 		"role": "contributor",
 		"url": "https://github.com/thomas-mauran/chess-tui/pulls?q=is%3Apr%20author%3ATomPlanche",
-		"description": "Play chess from your terminal.",
+		"description": "Play chess from your terminal. Free, open-source terminal chess game. Play with a friend locally, against any UCI chess engine (e.g. Stockfish), or online via Lichess. Runs on macOS, Linux, and Windows.",
 		"language": "Rust",
 		"medium": "/chess-tui.gif"
 	}

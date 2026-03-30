@@ -13,9 +13,9 @@
 		medium?: string;
 	};
 
-	const projects: Project[] = projectsData;
+	const projects = projectsData as Project[];
 
-	// Calculate years since 6 march 2002
+	// Calculate years since 6 March 2002
 	const age = Math.floor((Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 
 	onMount(() => {
@@ -213,11 +213,10 @@
         border: 1px dotted currentColor;
         text-transform: uppercase;
         letter-spacing: 0.1em;
+      }
 
-        &--role {
-          opacity: 0.6;
-        }
-
+      .tag--role {
+        opacity: 0.8;
       }
 
       .project-description {

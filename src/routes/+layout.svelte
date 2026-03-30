@@ -3,8 +3,9 @@
 
 	import favicon from '$lib/assets/favicon.svg';
 	import PixelReveal from '$lib/components/PixelReveal.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -17,6 +18,8 @@
 <main>
 	{@render children()}
 </main>
+
+<Footer lastCommit={data.lastCommit} />
 
 
 <style>

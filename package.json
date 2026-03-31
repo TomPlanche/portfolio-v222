@@ -1,7 +1,19 @@
 {
-	"name": "portfolio-v22",
+	"author": "Tom Planche <tomplanche@proton.me> (https://tomplanche.com)",
+	"readme": "./README.md",
+	"homepage": "https://tomplanche.com",
+	"name": "portfolio-v222",
+	"description": "Personal portfolio website for Tom Planche, CS engineer student at CNAM Paris.",
+	"keywords": ["portfolio", "svelte", "sveltekit", "typescript"],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/TomPlanche/portfolio-v222"
+	},
+	"bugs": {
+		"url": "https://github.com/TomPlanche/portfolio-v222/issues"
+	},
 	"private": true,
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",

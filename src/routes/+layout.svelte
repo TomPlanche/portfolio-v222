@@ -5,7 +5,7 @@
 	import PixelReveal from '$lib/components/PixelReveal.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
-	let { children, data } = $props();
+	let { children } = $props();
 </script>
 
 <svelte:head>
@@ -19,8 +19,7 @@
 	{@render children()}
 </main>
 
-<Footer lastCommit={data.lastCommit} />
-
+<Footer lastCommit={null} />
 
 <style>
     main {

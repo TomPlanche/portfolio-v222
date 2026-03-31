@@ -257,7 +257,6 @@
 
     h2 {
       font-family: "FK Raster Grotesk Compact Blended", monospace;
-      //font-size: 3rem;
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 400;
       letter-spacing: 0.1em;

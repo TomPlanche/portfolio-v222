@@ -58,7 +58,7 @@
 
 	let phi = 0;
 	let theta = 0.2;
-	let isDragging = false;
+	let isDragging = $state(false);
 	let hasDragged = false;
 	let lastX = 0;
 	let lastY = 0;
@@ -186,7 +186,7 @@
 </script>
 
 <div class="globe-wrapper">
-	<canvas {@attach globe}></canvas>
+	<canvas {@attach globe} class:grabbing={isDragging}></canvas>
 
 	{#each satelliteMarkers as m (m.id)}
 		<div
@@ -220,7 +220,7 @@
         height: 100%;
         cursor: grab;
 
-        &:active {
+        &.grabbing {
             cursor: grabbing;
         }
     }

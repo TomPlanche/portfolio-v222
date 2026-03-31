@@ -54,7 +54,6 @@
     padding: 2rem 4vmin;
     margin-top: 1rem;
     border-top: 1px dotted currentColor;
-    opacity: 0.6;
     font-family: "Supply Mono", monospace;
     font-size: 1rem;
     letter-spacing: 0.08em;
@@ -68,6 +67,8 @@
         color: inherit;
         text-decoration: none;
         transition: opacity 0.15s ease;
+        font-size: 1.25rem;
+        opacity: 0.7;
 
         &:hover {
           opacity: 1;
@@ -79,34 +80,45 @@
       }
     }
 
+    &:has(.links a:hover) {
+      .links a:not(:hover) {
+        opacity: 0.5;
+      }
+
+      .commit {
+        opacity: 0.5;
+      }
+    }
+
+    &:has(.commit:hover) .links a {
+      opacity: 0.5;
+    }
+
     .commit {
+      opacity: 0.7;
+      transition: opacity 0.15s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+
       a {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         color: inherit;
         text-decoration: none;
-        transition: opacity 0.15s ease;
-
-        &:hover {
-          opacity: 1;
-        }
+        font-size: 1rem;
       }
 
       .commit-icon {
-        width: 1em;
-        height: 1em;
+        width: 1rem;
+        height: 1rem;
         flex-shrink: 0;
-        opacity: 0.6;
       }
 
       .sha {
         font-family: "monocraft", monospace;
-        opacity: 0.7;
-      }
-
-      .date {
-        opacity: 0.5;
       }
     }
   }

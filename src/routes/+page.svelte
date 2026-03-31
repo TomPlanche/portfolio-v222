@@ -172,7 +172,7 @@
           border: 1px dotted currentColor;
           color: inherit;
           text-decoration: none;
-          opacity: 0.8;
+          opacity: 0.7;
           transition: opacity 0.15s ease, border-style 0.15s ease;
           height: 100%;
 
@@ -181,6 +181,10 @@
             border-style: solid;
           }
         }
+      }
+
+      .projects-list:has(a:hover) .project-item a:not(:hover) {
+        opacity: 0.5;
       }
 
       .project-header {

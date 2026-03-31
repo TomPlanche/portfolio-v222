@@ -2,7 +2,6 @@
 	import '$lib/styles/main.scss';
 
 	import favicon from '/static/zoizo.png';
-	import faviconPng from '/static/avion-bleu-zed-nora.png';
 	import PixelReveal from '$lib/components/PixelReveal.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
@@ -13,11 +12,11 @@
 	<link rel="icon" href={favicon} />
 
 	<meta content="Tom Planche's website" property="og:title">
-	<meta content={faviconPng} property="og:image">
+	<meta content={favicon} property="og:image">
 	<meta content="image/png" property="og:image:type">
-	<meta content="1536" property="og:image:width">
-	<meta content="1537" property="og:image:height">
-	<meta content="Nora's drawing of a plane" property="og:image:alt">
+	<meta content="424" property="og:image:width">
+	<meta content="440" property="og:image:height">
+	<meta content="Nora's drawing of us as birds in a heart shape" property="og:image:alt">
 </svelte:head>
 
 <PixelReveal />

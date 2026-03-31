@@ -2,7 +2,7 @@
 
 # Load environment variables from .env file
 set -a
-source ../.env
+source .env
 set +a
 
 # Fetch the last commit and save to JSON file

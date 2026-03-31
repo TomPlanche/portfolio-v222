@@ -24,3 +24,4 @@ vite.config.ts.timestamp-*
 
 # Assets
 static/fonts
+/static/website_infos.json

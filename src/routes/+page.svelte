@@ -32,7 +32,12 @@
 
 <section id="intro">
 	<h1>Tom Planche</h1>
-	<img src="/avion-bleu-zed-nora.png" alt="Avion Bleu Zed Nora" class="intro-image" />
+	<img
+		alt="Plane made by Nora"
+		class="intro-image"
+		src="/avion-bleu-zed-nora.png"
+		title="I like planes"
+	/>
 </section>
 
 <section id="about">
@@ -49,7 +54,9 @@
 		<p>
 			I'm a {age} years old French software engineer and CS student at <a href="https://www.cnam.fr/" target="_blank"
 			                                                                    rel="noopener noreferrer">CNAM</a>, based in
-			Paris. Rust enthusiast, I enjoy building CLI tools and web apps from Git workflow automation to interactive frontends.
+			Paris. <a href="https://github.com/TomPlanche?tab=repositories&q&type&language=rust&sort" target="_blank"
+			          rel="noopener noreferrer">Rust enthusiast</a>, I enjoy building CLI tools and web apps from Git workflow
+			automation to interactive frontends.
 			Currently working at <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
 			previously at <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>.
 		</p>

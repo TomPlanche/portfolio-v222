@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '$lib/styles/main.scss';
 
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/avion-bleu-zed-nora.ico';
 	import PixelReveal from '$lib/components/PixelReveal.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 

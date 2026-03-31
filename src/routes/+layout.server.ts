@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { WEBSITE_INFOS_URL } from '$env/static/private';
 
 type CommitInfo = {
 	sha: string;
@@ -8,16 +8,7 @@ type CommitInfo = {
 
 export const load = async (): Promise<{ lastCommit: CommitInfo | null }> => {
 	try {
-		console.log('trying to fetch last commit with token:');
-		const response = await fetch(
-			'https://api.github.com/repos/TomPlanche/portfolio-v222/commits?per_page=1',
-			{
-				headers: {
-					Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-					Accept: 'application/vnd.github.v3+json'
-				}
-			}
-		);
+		const response = await fetch(WEBSITE_INFOS_URL);
 
 		if (!response.ok) {
 			console.error(response.statusText);

@@ -19,23 +19,6 @@
 	// Calculate years since 6 March 2002
 	const age = Math.floor((Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25));
 
-	type Links = {
-		href: string;
-		name: string;
-	}
-	const headerLinks: Links[] = [{
-		href: 'https://github.com/tomplanche',
-		name: 'GitHub'
-	}, {
-		href: 'https://www.linkedin.com/in/tomplanche/',
-		name: 'LinkedIn'
-	}, {
-
-		href: 'https://api.tomplanche.com/static/CV_PLANCHE-TOM_2026.pdf/',
-		name: 'Resume'
-	}
-	];
-
 	onMount(() => {
 		geolocation.request();
 	});
@@ -49,6 +32,7 @@
 
 <section id="intro">
 	<h1>Tom Planche</h1>
+	<img src="/avion-bleu-zed-nora.png" alt="Avion Bleu Zed Nora" class="intro-image" />
 </section>
 
 <section id="about">
@@ -254,6 +238,11 @@
       align-items: center;
       justify-content: flex-start;
       gap: 2rem;
+
+      .intro-image {
+        height: 6rem;
+        width: auto;
+      }
     }
 
     &:not(#intro) {
@@ -289,7 +278,7 @@
     }
 
     > div, > ul {
-      padding: 4rem 2rem;
+      padding: 4rem 2rem 0 2rem;
     }
 
     @media (max-width: 767px) {

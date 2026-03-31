@@ -52,11 +52,11 @@
     align-items: center;
     gap: 0.5rem;
     padding: 2rem 4vmin;
-    margin-top: 4rem;
+    margin-top: 1rem;
     border-top: 1px dotted currentColor;
     opacity: 0.6;
     font-family: "Supply Mono", monospace;
-    font-size: 0.75rem;
+    font-size: 1rem;
     letter-spacing: 0.08em;
 
     .links {

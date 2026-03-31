@@ -106,7 +106,7 @@
 			theta: 0.2,
 			dark: 1,
 			diffuse: 1.5,
-			scale: 1.1,
+			scale: 1,
 			offset: [0, 20],
 			mapSamples: 24000,
 			mapBrightness: 20,

@@ -251,7 +251,7 @@
 
     h1 {
       font-family: "PP Mondwest", monospace;
-      font-size: 6rem;
+      font-size: clamp(3rem, 12vw, 6rem);
     }
 
 

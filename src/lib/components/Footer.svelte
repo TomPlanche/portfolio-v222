@@ -52,7 +52,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 2rem 4vmin;
-    margin-top: 1rem;
+    margin-top: auto;
     border-top: 1px dotted currentColor;
     font-family: "Supply Mono", monospace;
     font-size: 1rem;

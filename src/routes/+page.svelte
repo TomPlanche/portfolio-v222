@@ -3,7 +3,9 @@
 	import projectsData from '$lib/projects.json';
 	import Globe from '$lib/components/Globe.svelte';
 	import ImageReveal from '$lib/components/ImageReveal.svelte';
+	import PostsList from '$lib/components/PostsList.svelte';
 	import { geolocation } from '$lib/geolocation.svelte';
+	import { posts } from '$lib/posts';
 
 	type Project = {
 		name: string;
@@ -29,16 +31,6 @@
 		}
 	});
 </script>
-
-<section id="intro">
-	<h1>Tom Planche</h1>
-	<img
-		alt="Plane made by Nora"
-		class="intro-image"
-		src="/avion-bleu-zed-nora.png"
-		title="I like planes"
-	/>
-</section>
 
 <section id="about">
 	<h2>About.</h2>
@@ -96,6 +88,12 @@
 			</li>
 		{/each}
 	</ul>
+</section>
+
+<section id="writing">
+	<h2>Writing.</h2>
+
+	<PostsList {posts} />
 </section>
 
 <style lang="scss">
@@ -244,27 +242,7 @@
       }
     }
 
-    &#intro {
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 2rem;
-
-      .intro-image {
-        height: 6rem;
-        width: auto;
-      }
-    }
-
-    &:not(#intro) {
-      padding-top: 3rem;
-    }
-
-    h1 {
-      font-family: "PP Mondwest", monospace;
-      font-size: clamp(3rem, 12vw, 6rem);
-    }
-
+    padding-top: 3rem;
 
     h2 {
       font-family: "FK Raster Grotesk Compact Blended", monospace;

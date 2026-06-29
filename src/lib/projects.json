@@ -20,7 +20,7 @@
 		"url": "https://github.com/zed-industries/zed/pulls?q=is%3Apr%20author%3ATomPlanche",
 		"description": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
 		"language": "Rust",
-		"medium": "https://zed.dev/img/homepage/posters/debugger.webp"
+		"medium": "/rona.gif"
 	},
 	{
 		"name": "cobe",

@@ -1,11 +1,13 @@
 <script lang="ts">
 	import '$lib/styles/main.scss';
 
-	import favicon from '/static/zoizo.png';
 	import PixelReveal from '$lib/components/PixelReveal.svelte';
+	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
 	let { children, data } = $props();
+
+	const favicon = '/zoizo.png';
 </script>
 
 <svelte:head>
@@ -22,6 +24,8 @@
 <PixelReveal />
 <div id="noise"></div>
 
+<Header />
+
 <main>
 	{@render children()}
 </main>
@@ -29,6 +33,12 @@
 <Footer lastCommit={data.lastCommit} />
 
 <style>
+    :global(body) {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
     main {
         padding: 2rem 4vmin;
     }

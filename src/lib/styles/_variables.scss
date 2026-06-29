@@ -1,7 +1,7 @@
 /**
  * COLORS
  */
-$rust-deep-blue: #1E2650;
+$rust-deep-blue: #1e2650;
 
 /**
  * Mixins
@@ -15,58 +15,57 @@ $rust-deep-blue: #1E2650;
   user-select: none;
 }
 
-
 /**
  * Fonts
  */
 // Mondwest
 @font-face {
-  font-family: "PP Mondwest";
-  src: url("/fonts/PPMondwest/PPMondwest-Bold.woff2") format("woff2");
+  font-family: 'PP Mondwest';
+  src: url('/fonts/PPMondwest/PPMondwest-Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "PP Mondwest";
-  src: url("/fonts/PPMondwest/PPMondwest-Regular.woff2") format("woff2");
+  font-family: 'PP Mondwest';
+  src: url('/fonts/PPMondwest/PPMondwest-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 // Supply Mono
 @font-face {
-  font-family: "Supply Mono";
-  src: url("/fonts/PPSupplyMono/PPSupplyMono-Ultralight.woff2") format("woff2");
+  font-family: 'Supply Mono';
+  src: url('/fonts/PPSupplyMono/PPSupplyMono-Ultralight.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Supply Mono";
-  src: url("/fonts/PPSupplyMono/PPSupplyMono-Regular.woff2") format("woff2");
+  font-family: 'Supply Mono';
+  src: url('/fonts/PPSupplyMono/PPSupplyMono-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Supply Mono";
-  src: url("/fonts/PPSupplyMono/PPSupplyMono-Medium.woff2") format("woff2");
+  font-family: 'Supply Mono';
+  src: url('/fonts/PPSupplyMono/PPSupplyMono-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "Supply Mono";
-  src: url("/fonts/PPSupplyMono/PPSupplyMono-Bold.woff2") format("woff2");
+  font-family: 'Supply Mono';
+  src: url('/fonts/PPSupplyMono/PPSupplyMono-Bold.woff2') format('woff2');
   font-weight: bold;
   font-style: normal;
 }
 
 // FK Raster Grotesk
 @font-face {
-  font-family: "FK Raster Grotesk Compact Blended";
-  src: url("/fonts/FK Raster Grotesk/FKRasterGroteskCompactTrial-Blended.otf");
+  font-family: 'FK Raster Grotesk Compact Blended';
+  src: url('/fonts/FK Raster Grotesk/FKRasterGroteskCompactTrial-Blended.otf');
   font-weight: normal;
   font-style: normal;
 }

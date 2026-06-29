@@ -1,48 +1,52 @@
 <script lang="ts">
-	type CommitInfo = {
-		sha: string;
-		date: string;
-		url: string;
-	};
+  type CommitInfo = {
+    sha: string;
+    date: string;
+    url: string;
+  };
 
-	let { lastCommit }: { lastCommit: CommitInfo | null } = $props();
+  let { lastCommit }: { lastCommit: CommitInfo | null } = $props();
 
-	const links: {
-		href: string;
-		title: string;
-	}[] = [
-		{ href: 'https://github.com/tomplanche', title: 'github' },
-		{ href: 'mailto:tomplanche@proton.me', title: 'mail' },
-		{ href: 'https://linkedin.com/in/tom-planche', title: 'linkedin' },
-		{ href: 'https://api.tomplanche.com/static/CV_PLANCHE-TOM_2026.pdf', title: 'resume' }
-	];
-
+  const links: {
+    href: string;
+    title: string;
+  }[] = [
+    { href: 'https://github.com/tomplanche', title: 'github' },
+    { href: 'mailto:tomplanche@proton.me', title: 'mail' },
+    { href: 'https://linkedin.com/in/tom-planche', title: 'linkedin' },
+    { href: 'https://api.tomplanche.com/static/CV_PLANCHE-TOM_2026.pdf', title: 'resume' }
+  ];
 </script>
 
 <footer>
-	<div class="links">
-		{#each links as { href, title } (href)}
-			<a href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+  <div class="links">
+    {#each links as { href, title } (href)}
+      <a {href} target="_blank" rel="noopener noreferrer">{title}</a>
 
-			{#if href !== links[links.length - 1].href}
-				<span class="sep">/</span>
-			{/if}
-		{/each}
-	</div>
+      {#if href !== links[links.length - 1].href}
+        <span class="sep">/</span>
+      {/if}
+    {/each}
+  </div>
 
-	{#if lastCommit}
-		<div class="commit">
-			<a href={lastCommit.url} target="_blank" rel="noopener noreferrer">
-				<svg class="commit-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"
-				     aria-hidden="true">
-					<line x1="0" y1="8" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" />
-					<circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
-					<line x1="12" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.5" />
-				</svg>
-				<span class="sha">{lastCommit.sha}</span>
-			</a>
-		</div>
-	{/if}
+  {#if lastCommit}
+    <div class="commit">
+      <a href={lastCommit.url} target="_blank" rel="noopener noreferrer">
+        <svg
+          class="commit-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <line x1="0" y1="8" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+          <line x1="12" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+        <span class="sha">{lastCommit.sha}</span>
+      </a>
+    </div>
+  {/if}
 </footer>
 
 <style lang="scss">
@@ -54,7 +58,7 @@
     padding: 2rem 4vmin;
     margin-top: auto;
     border-top: 1px dotted currentColor;
-    font-family: "Supply Mono", monospace;
+    font-family: 'Supply Mono', monospace;
     font-size: 1rem;
     letter-spacing: 0.08em;
 
@@ -118,7 +122,7 @@
       }
 
       .sha {
-        font-family: "monocraft", monospace;
+        font-family: 'monocraft', monospace;
       }
     }
   }

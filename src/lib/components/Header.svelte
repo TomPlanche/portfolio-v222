@@ -1,21 +1,26 @@
 <script lang="ts">
-	import { page } from '$app/state';
+  import { page } from '$app/state';
 
-	const isActive = (path: string): boolean =>
-		path === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(path);
+  const isActive = (path: string): boolean =>
+    path === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(path);
 </script>
 
 <header>
-	<a class="brand" href="/" aria-label="Tom Planche - home">
-		<h1>Tom Planche</h1>
-		<img alt="Plane made by Nora" class="plane" src="/avion-bleu-zed-nora.png" title="I like planes" />
-	</a>
+  <a class="brand" href="/" aria-label="Tom Planche - home">
+    <h1>Tom Planche</h1>
+    <img
+      alt="Plane made by Nora"
+      class="plane"
+      src="/avion-bleu-zed-nora.png"
+      title="I like planes"
+    />
+  </a>
 
-	<nav>
-		<a href="/" aria-current={isActive('/') ? 'page' : undefined}>home</a>
-		<span class="sep">/</span>
-		<a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>blog</a>
-	</nav>
+  <nav>
+    <a href="/" aria-current={isActive('/') ? 'page' : undefined}>home</a>
+    <span class="sep">/</span>
+    <a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>blog</a>
+  </nav>
 </header>
 
 <style lang="scss">
@@ -35,7 +40,7 @@
       text-decoration: none;
 
       h1 {
-        font-family: "PP Mondwest", monospace;
+        font-family: 'PP Mondwest', monospace;
         font-size: clamp(3rem, 12vw, 6rem);
         line-height: 1;
       }
@@ -50,7 +55,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-family: "Supply Mono", monospace;
+      font-family: 'Supply Mono', monospace;
       font-size: 1.25rem;
       letter-spacing: 0.08em;
 
@@ -64,7 +69,7 @@
           opacity: 1;
         }
 
-        &[aria-current="page"] {
+        &[aria-current='page'] {
           opacity: 1;
           border-bottom: 1px dotted currentColor;
         }

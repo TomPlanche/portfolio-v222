@@ -30,9 +30,8 @@
 <style lang="scss">
 	article {
 		width: 100%;
-		max-width: 720px;
+    max-width: 70vw;
 		margin: 0 auto;
-		padding-top: 3rem;
 	}
 
 	.back {
@@ -56,7 +55,7 @@
 
 		h1 {
 			font-family: 'PP Mondwest', monospace;
-			font-size: clamp(2.5rem, 8vw, 4rem);
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
 			margin: 0 0 0.75rem;
 		}
 
@@ -69,8 +68,6 @@
 		}
 	}
 
-	/* Styling for the post body. Targets generated content via :global,
-	   since the markup comes from the rendered post component. */
 	.prose {
 		font-family: 'Supply Mono', monospace;
 		font-size: 1.15rem;
@@ -79,6 +76,8 @@
 
 		:global(p) {
 			margin: 0 0 1.5rem;
+      text-align: justify;
+      //text-align: left;
 		}
 
 		:global(h2) {
@@ -109,11 +108,22 @@
 		:global(ol) {
 			margin: 0 0 1.5rem;
 			padding-left: 1.5rem;
+      text-align: left;
 		}
 
 		:global(li) {
 			margin-bottom: 0.5rem;
+      text-align: left;
 		}
+
+    :global(code) {
+      font-family: 'monocraft', monospace;
+      font-size: 0.9em;
+      padding: 0.1em 0.35em;
+      border: 1px dotted currentColor;
+      border-radius: 3px;
+      overflow-wrap: anywhere;
+    }
 
 		:global(pre) {
 			font-family: 'monocraft', monospace;
@@ -122,6 +132,14 @@
 			border: 1px dotted currentColor;
 			overflow-x: auto;
 			margin: 0 0 1.5rem;
+      text-align: left;
+    }
+
+    /* code inside a pre block is a full snippet, not an inline token */
+    :global(pre code) {
+      padding: 0;
+      border: none;
+      white-space: pre;
 		}
 
 		:global(blockquote) {
@@ -129,6 +147,7 @@
 			padding-left: 1rem;
 			border-left: 3px dotted currentColor;
 			opacity: 0.8;
+      text-align: justify;
 		}
 	}
 </style>

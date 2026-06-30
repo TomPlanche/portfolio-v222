@@ -38,8 +38,6 @@
   @media (max-width: 767px) {
     article {
       max-width: 100%;
-      margin-inline: -4vmin;
-      padding-inline: 0.5rem;
     }
   }
 

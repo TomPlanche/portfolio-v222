@@ -34,6 +34,15 @@
     margin: 0 auto;
   }
 
+  // On mobile, go near full-width and cancel the layout's 4vmin side padding, leaving only a slim gutter.
+  @media (max-width: 767px) {
+    article {
+      max-width: 100%;
+      margin-inline: -4vmin;
+      padding-inline: 0.5rem;
+    }
+  }
+
   .back {
     font-family: 'Supply Mono', monospace;
     font-size: 0.9rem;

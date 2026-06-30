@@ -37,7 +37,9 @@
   // On mobile, go near full-width and cancel the layout's 4vmin side padding, leaving only a slim gutter.
   @media (max-width: 767px) {
     article {
-      max-width: 100%;
+      max-width: 99%;
+
+      font-size: 35%;
     }
   }
 
@@ -77,7 +79,7 @@
 
   .prose {
     font-family: 'Supply Mono', monospace;
-    font-size: 1.15rem;
+    font-size: 1.15em;
     line-height: 1.6;
     text-wrap: pretty;
 
@@ -89,13 +91,13 @@
 
     :global(h2) {
       font-family: 'monocraft', monospace;
-      font-size: 1.6rem;
+      font-size: 1.6em;
       margin: 2.5rem 0 1rem;
     }
 
     :global(h3) {
       font-family: 'monocraft', monospace;
-      font-size: 1.3rem;
+      font-size: 1.3em;
       margin: 2rem 0 0.75rem;
     }
 
@@ -134,7 +136,7 @@
 
     :global(pre) {
       font-family: 'monocraft', monospace;
-      font-size: 0.95rem;
+      font-size: 0.95em;
       padding: 1rem;
       border: 1px dotted currentColor;
       overflow-x: auto;

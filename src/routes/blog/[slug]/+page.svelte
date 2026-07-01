@@ -32,14 +32,14 @@
     width: 100%;
     max-width: 70vw;
     margin: 0 auto;
+
+    font-size: 35%;
   }
 
   // On mobile, go near full-width and cancel the layout's 4vmin side padding, leaving only a slim gutter.
   @media (max-width: 767px) {
     article {
       max-width: 99%;
-
-      font-size: 35%;
     }
   }
 

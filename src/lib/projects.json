@@ -12,7 +12,10 @@
     "role": "author",
     "url": "https://github.com/rona-rs/rona",
     "description": "A Rust CLI that streamlines your Git workflow by combining staging, commit generation, and push into a cohesive set of ergonomic commands. It supports structured commit messages with customizable templates, smart file exclusion patterns, and branch sync ; all configurable per-project.",
-    "language": "Rust"
+    "language": "Rust",
+    "medium": "/zoizo.png",
+    "maxWidth": 40,
+    "maxHeight": 40
   },
   {
     "name": "zed",
@@ -20,7 +23,7 @@
     "url": "https://github.com/zed-industries/zed/pulls?q=is%3Apr%20author%3ATomPlanche",
     "description": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
     "language": "Rust",
-    "medium": "/rona.gif"
+    "medium": "/zed.gif"
   },
   {
     "name": "cobe",

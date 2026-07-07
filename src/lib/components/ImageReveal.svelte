@@ -4,9 +4,36 @@
 
   type Props = {
     children: Snippet;
+    display?: string;
+    flexDirection?: string;
+    justifyContent?: string;
+    alignItems?: string;
+    flexWrap?: string;
+    gap?: string;
   };
 
-  const { children }: Props = $props();
+  const {
+    children,
+    display,
+    flexDirection,
+    justifyContent,
+    alignItems,
+    flexWrap,
+    gap
+  }: Props = $props();
+
+  const wrapperStyle = $derived(
+    [
+      display && `display: ${display}`,
+      flexDirection && `flex-direction: ${flexDirection}`,
+      justifyContent && `justify-content: ${justifyContent}`,
+      alignItems && `align-items: ${alignItems}`,
+      flexWrap && `flex-wrap: ${flexWrap}`,
+      gap && `gap: ${gap}`
+    ]
+      .filter(Boolean)
+      .join('; ')
+  );
 
   const PIXEL_SIZE = 12;
   const DURATION = 900;
@@ -143,7 +170,7 @@
   };
 </script>
 
-<div class="image-reveal">
+<div class="image-reveal" style={wrapperStyle}>
   {@render children()}
   {#if !revealed}
     <canvas {@attach attach}></canvas>

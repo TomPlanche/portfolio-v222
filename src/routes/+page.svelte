@@ -14,6 +14,8 @@
     description: string;
     language: string;
     medium?: string;
+    maxWidth?: number;
+    maxHeight?: number;
   };
 
   const projects = projectsData as Project[];
@@ -95,8 +97,19 @@
                   />
                 </ImageReveal>
               {:else}
-                <ImageReveal>
-                  <img src={project.medium} alt="{project.name} preview" />
+                <ImageReveal
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <img
+                    src={project.medium}
+                    alt="{project.name} preview"
+                    style="{project.maxWidth ? `max-width: ${project.maxWidth}%;` : '100%'}{project.maxHeight
+                      ? `max-height: ${project.maxHeight}%;`
+                      : '100%'}"
+                  />
                 </ImageReveal>
               {/if}
             </div>
@@ -257,6 +270,7 @@
         img {
           width: 100%;
           height: auto;
+          object-fit: contain;
           display: block;
         }
       }

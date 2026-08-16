@@ -1,24 +1,46 @@
 <script lang="ts">
   import '$lib/styles/main.scss';
 
+  import { page } from '$app/state';
+
   import PixelReveal from '$lib/components/PixelReveal.svelte';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import { resolveSeo, SITE_NAME } from '$lib/seo';
 
   let { children, data } = $props();
 
   const favicon = '/zoizo.png';
+
+  // Single source of truth for the head: every route feeds this through the
+  // `seo` key of its `load`. See `$lib/seo`.
+  const seo = $derived(resolveSeo(page.url, page.data.seo));
 </script>
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <link rel="canonical" href={seo.url} />
 
-  <meta content="Tom Planche's website" property="og:title" />
-  <meta content={favicon} property="og:image" />
-  <meta content="image/png" property="og:image:type" />
-  <meta content="424" property="og:image:width" />
-  <meta content="440" property="og:image:height" />
-  <meta content="Nora's drawing of us as birds in a heart shape" property="og:image:alt" />
+  <title>{seo.title}</title>
+  <meta content={seo.description} name="description" />
+
+  <meta content={SITE_NAME} property="og:site_name" />
+  <meta content={seo.type} property="og:type" />
+  <meta content={seo.url} property="og:url" />
+  <meta content={seo.ogTitle} property="og:title" />
+  <meta content={seo.description} property="og:description" />
+  <meta content={seo.image.url} property="og:image" />
+  <meta content={seo.image.type} property="og:image:type" />
+  <meta content={String(seo.image.width)} property="og:image:width" />
+  <meta content={String(seo.image.height)} property="og:image:height" />
+  <meta content={seo.image.alt} property="og:image:alt" />
+
+  {#if seo.publishedAt}
+    <meta content={seo.publishedAt} property="article:published_time" />
+  {/if}
+
+  <!-- X falls back to the Open Graph tags, but renders nothing without this. -->
+  <meta content="summary" name="twitter:card" />
 </svelte:head>
 
 <PixelReveal />

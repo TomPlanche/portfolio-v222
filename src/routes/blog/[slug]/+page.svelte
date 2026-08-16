@@ -7,13 +7,6 @@
   const Post = $derived(data.component);
 </script>
 
-<svelte:head>
-  <title>{data.metadata.title} - Tom Planche</title>
-  {#if data.metadata.description}
-    <meta name="description" content={data.metadata.description} />
-  {/if}
-</svelte:head>
-
 <article>
   <a class="back" href="/blog">&larr; writing</a>
 

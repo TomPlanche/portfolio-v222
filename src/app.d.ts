@@ -1,12 +1,11 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+import type { Seo } from '$lib/seo';
+
 declare global {
   namespace App {
-    // interface Error {}
-    // interface Locals {}
-    // interface PageData {}
-    // interface PageState {}
-    // interface Platform {}
+    interface PageData {
+      /** Head metadata for the current route. Rendered by `+layout.svelte`. */
+      seo?: Seo;
+    }
   }
 }
 

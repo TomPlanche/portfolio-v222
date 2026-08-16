@@ -5,11 +5,6 @@
   let { data }: PageProps = $props();
 </script>
 
-<svelte:head>
-  <title>blog - Tom Planche</title>
-  <meta name="description" content="Small posts by Tom Planche." />
-</svelte:head>
-
 <section id="blog">
   <h2>Writing.</h2>
 

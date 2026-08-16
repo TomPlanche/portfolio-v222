@@ -11,6 +11,12 @@ export const load: PageLoad = ({ params }) => {
 
   return {
     component: post.default,
-    metadata: post.metadata
+    metadata: post.metadata,
+    seo: {
+      title: post.metadata.title,
+      description: post.metadata.description,
+      type: 'article' as const,
+      publishedAt: post.metadata.date
+    }
   };
 };

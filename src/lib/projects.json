@@ -40,5 +40,27 @@
     "description": "Play chess from your terminal. Free, open-source terminal chess game. Play with a friend locally, against any UCI chess engine (e.g. Stockfish), or online via Lichess. Runs on macOS, Linux, and Windows.",
     "language": "Rust",
     "medium": "/chess-tui.gif"
+  },
+  {
+    "name": "multicalc-rust",
+    "role": "contributor",
+    "url": "https://github.com/kmolan/multicalc-rust/pulls?q=is%3Apr%20author%3ATomPlanche",
+    "description": "A Rust scientific computing library for single and multi-variable calculus: numerical differentiation and integration, jacobians, hessians and series approximations, with no_std support.",
+    "language": "Rust",
+    "medium": "/multicalc_combined_demo_reel.gif"
+  },
+  {
+    "name": "clap",
+    "role": "contributor",
+    "url": "https://github.com/clap-rs/clap/pulls?q=is%3Apr%20author%3ATomPlanche",
+    "description": "A full featured, fast Command Line Argument Parser for Rust, powering a large part of the CLI ecosystem with derive macros, subcommands, validation and shell completions.",
+    "language": "Rust"
+  },
+  {
+    "name": "dialoguer",
+    "role": "contributor",
+    "url": "https://github.com/console-rs/dialoguer/pulls?q=is%3Apr%20author%3ATomPlanche",
+    "description": "A Rust library for building interactive command line prompts: inputs, confirmations, passwords, selects, multi-selects and fuzzy search.",
+    "language": "Rust"
   }
 ]

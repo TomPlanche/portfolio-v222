@@ -1,11 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import projectsData from '$lib/projects.json';
+  import ActivityList from '$lib/components/ActivityList.svelte';
   import Globe from '$lib/components/Globe.svelte';
   import ImageReveal from '$lib/components/ImageReveal.svelte';
   import PostsList from '$lib/components/PostsList.svelte';
   import { geolocation } from '$lib/geolocation.svelte';
   import { posts } from '$lib/posts';
+  import type { PageData } from './$types';
+
+  let { data }: { data: PageData } = $props();
+
+  const GITHUB_PROFILE = 'https://github.com/TomPlanche';
 
   type Project = {
     name: string;
@@ -106,9 +112,9 @@
                   <img
                     src={project.medium}
                     alt="{project.name} preview"
-                    style="{project.maxWidth ? `max-width: ${project.maxWidth}%;` : '100%'}{project.maxHeight
-                      ? `max-height: ${project.maxHeight}%;`
-                      : '100%'}"
+                    style="{project.maxWidth
+                      ? `max-width: ${project.maxWidth}%;`
+                      : '100%'}{project.maxHeight ? `max-height: ${project.maxHeight}%;` : '100%'}"
                   />
                 </ImageReveal>
               {/if}
@@ -118,6 +124,16 @@
       </li>
     {/each}
   </ul>
+</section>
+
+<section id="activity">
+  <h2>Activity.</h2>
+
+  <ActivityList
+    events={data.activity.events}
+    compactLimit={data.activity.compactLimit}
+    profileUrl={GITHUB_PROFILE}
+  />
 </section>
 
 <section id="writing">

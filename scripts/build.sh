@@ -12,4 +12,3 @@ set +a
 bash scripts/fetch_commit_info.sh
 
 bun run build
-

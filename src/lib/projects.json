@@ -50,6 +50,13 @@
     "medium": "/multicalc_combined_demo_reel.gif"
   },
   {
+    "name": "typst",
+    "role": "contributor",
+    "url": "https://github.com/typst/typst/pulls?q=is%3Apr%20author%3ATomPlanche",
+    "description": "A markup-based typesetting system that aims to be as powerful as LaTeX and as easy to learn as Markdown, with incremental compilation that keeps the preview in step with the source.",
+    "language": "Rust"
+  },
+  {
     "name": "clap",
     "role": "contributor",
     "url": "https://github.com/clap-rs/clap/pulls?q=is%3Apr%20author%3ATomPlanche",

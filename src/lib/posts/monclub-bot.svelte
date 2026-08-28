@@ -2,7 +2,7 @@
   import type { PostMetadata } from '$lib/posts';
 
   export const metadata: PostMetadata = {
-    title: 'I reverse-engineered my volleyball club booking app',
+    title: 'I reverse-engineered my volleyball club booking app.',
     date: '2026-06-29',
     description:
       'How I intercepted the MonClub app traffic and built a terminal CLI and Discord bot to book, cancel and manage my volleyball sessions straight from the API.'

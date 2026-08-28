@@ -177,6 +177,37 @@
   a failure, and it does not retry those, because retrying a "you have no credits left" answer never helps.
 </p>
 
+<h3>The waiting list you never asked for</h3>
+
+<p>
+  Months later the same class of problem bit me again, in a nastier way. Book a session that is
+  already full and the API does not refuse. It answers <code>200</code>, hands back a booking record
+  with an <code>_id</code>, and by every check I had it looks exactly like a confirmed booking. It
+  is not. The server has quietly parked you on the session's waiting list, and no spot is being held
+  for you.
+</p>
+
+<p>
+  The tell is in the session, not in the booking response. A session keeps two lists:
+  <code>yesParticipants</code> for the people who actually have a spot, and
+  <code>maybeParticipants</code> for the waiting list. A full session puts you in the second one. So
+  after a booking that looks successful, the bot re-reads the session detail and checks which list
+  it landed in; <code>maybeParticipants</code> is reported as "not booked" rather than as a win.
+</p>
+
+<p>
+  Annoyingly, the booking endpoint echoes the session back in several shapes depending on the case:
+  sometimes at the top level, sometimes under <code>session</code>, sometimes under
+  <code>sessions</code>, and either as one object or as an array of them. The check looks in all of
+  them rather than trusting one.
+</p>
+
+<p>
+  This distinction matters more than it looks, because it splits failures in two. "No credits left"
+  will never fix itself, so the bot gives up on the spot. "The session is full" fixes itself the
+  moment somebody unbooks, so it is worth waiting for.
+</p>
+
 <h2>The timing problem, solved by a status code</h2>
 
 <p>
@@ -233,18 +264,20 @@
   loop above), view or cancel my existing bookings, browse past sessions, or even compare the
   attendee lists of two sessions to see who else is coming. When more than one account is configured
   it also asks who to book for, so a single run can grab the same slot for several people. There is
-  also a <code>prebook</code> command for the rare genuinely time-gated slot: I pick a session and a target
-  time, and it sleeps until then before running the same retry loop.
+  also a <code>prebook</code> command for the rare genuinely time-gated slot: I pick a session and a
+  target time, and it sleeps until then before running the same retry loop. An <code>export</code> command
+  writes my upcoming sessions out as a calendar file, which I come back to at the end.
 </p>
 
 <h3>The Discord bot</h3>
 
 <p>
   Same powers, exposed as slash commands (<code>/list</code>, <code>/book</code>,
-  <code>/cancel</code>, <code>/prebook</code>, <code>/bookings</code>, and a per-booking
-  <code>/booking</code> detail view), so a friend and I can book straight from our group chat. If a
-  single-target <code>/book</code> comes back with a 409, a background task keeps retrying and sends a
-  follow-up message once the slot is confirmed.
+  <code>/cancel</code>, <code>/prebook</code>, <code>/bookings</code>, a per-booking
+  <code>/booking</code> detail view, and the <code>/notify</code>, <code>/watchbook</code> and
+  <code>/export</code> commands below), so a friend and I can book straight from our group chat. If
+  a single-target <code>/book</code> comes back with a 409, a background task keeps retrying and sends
+  a follow-up message once the slot is confirmed.
 </p>
 
 <h2>Booking for the whole group</h2>
@@ -279,14 +312,101 @@
   transaction gives you, built out of two API calls and a bit of bookkeeping.
 </p>
 
+<h2>Waiting instead of racing</h2>
+
+<p>
+  Ignoring the booking window solved the sessions that are merely early. It did nothing for the two
+  cases where the honest answer is "not yet": a session whose window has not opened, and a session
+  that is full right now. Both are a waiting game, so the bot waits.
+</p>
+
+<h3>/notify, when I want to book it myself</h3>
+
+<p>
+  The smallest version is just an alert. <code>/notify</code> takes a session that is not bookable
+  yet and pings me in the channel when it crosses its booking window, which the bot works out as the
+  session's start minus <code>BOOKING_WINDOW_HOURS</code> (144 by default, the club's six days). It books
+  nothing; it only tells me the door is open.
+</p>
+
+<h3>/watchbook, when I want the spot</h3>
+
+<p>
+  <code>/watchbook</code> is <code>/notify</code> and <code>/book</code> welded together, and it
+  waits through both reasons a session can turn you away. If the window is not open yet, it uses the
+  fast 409 loop from earlier, because the server can still answer 409 right at the boundary. If the
+  session is full, it drops to a much slower poll, every <code>WATCH_POLL_INTERVAL</code> seconds (a minute
+  by default), and keeps at it until the session actually starts. Somebody cancels two days out, the bot
+  takes their spot.
+</p>
+
+<p>
+  The part I like is that it never reads the free capacity to decide whether to try. It just tries.
+  Reading "one spot left" and then booking it is two requests with a gap in between, and that gap is
+  exactly where someone else takes it. Attempting the booking is one request that both finds the
+  spot and claims it. The waiting-list check above is what makes that safe: a full session accepts
+  the request, so "did it work" cannot be read off the status code.
+</p>
+
+<p>
+  Two deliberate differences from the group booking above. A rejection that waiting cannot fix (<code
+    >noCredits</code
+  >, <code>noMembership</code>) stops the watch immediately, since polling for days would not help.
+  And unlike an atomic group <code>/book</code>, several people on one
+  <code>/watchbook</code> are watched independently: spots free up one at a time, and turning one down
+  because the others are not available yet would be daft.
+</p>
+
+<h3>Watching for sessions that do not exist yet</h3>
+
+<p>
+  The last watcher does not care about any particular session. Given a channel id, the bot polls the
+  listing in the background and announces anything it has not seen before. The only subtlety is the
+  first poll: it records what is already there without saying a word. Otherwise the channel would
+  get the entire current listing every time the bot restarts, and only sessions that show up in a
+  <em>later</em> poll are actually news.
+</p>
+
+<h2>Putting the sessions in my calendar</h2>
+
+<p>
+  The newest addition has nothing to do with beating anyone to anything. Both interfaces export
+  upcoming bookings as an iCalendar file: <code>export</code> in the CLI, <code>/export</code> in
+  Discord, which replies with the <code>.ics</code> as an attachment. Import it into Apple Calendar, Google
+  Calendar or Outlook and the volleyball sits next to everything else.
+</p>
+
+<p>
+  It costs a single request whatever the number of sessions, because everything an event needs is
+  already in the bookings listing: the name, the start, the venue address, and, for the notes, the
+  booked/total count, the coaches and the participants list.
+</p>
+
+<p>
+  Two details took most of the thought. Times are written as UTC instants derived from the API's own
+  timestamps rather than from the French wall-clock string it also returns (<code>19H30</code>), so
+  they land at the right local time in any calendar app. And each event's UID comes from the session
+  id, which makes it stable: re-importing an updated file refreshes the existing entries instead of
+  leaving me with two copies of every session. Exporting several people into one file prefixes the
+  UID and the summary per account so their events do not collide.
+</p>
+
+<p>
+  The writer itself is a hundred-odd lines rather than a dependency. The fiddly parts of the format,
+  escaping text, folding lines at 75 octets, CRLF endings, are a few lines each, and one
+  <code>VEVENT</code> shape did not feel worth a crate.
+</p>
+
 <h2>Was it worth it?</h2>
 
 <p>
   Honestly, yes. The actual API surface is tiny: two auth calls, one listing call, one bookings
   call, a session-detail call, and one endpoint that both books and cancels. Most of the work was
-  the watching and the figuring-out, not the code. And now, instead of setting an alarm for a random
-  minute six days from now, I book from my terminal or a Discord message whenever it suits me, and
-  we get to play volleyball.
+  the watching and the figuring-out, not the code. Everything I have added since, the watchers, the
+  waiting-list check, the calendar export, has been built on that same handful of calls; I have not
+  had to go back to Proxyman once. And now, instead of setting an alarm for a random minute six days
+  from now, I book from my terminal or a Discord message whenever it suits me, and we get to play
+  volleyball.
 </p>
 
 <p>

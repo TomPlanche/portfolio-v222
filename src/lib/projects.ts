@@ -17,4 +17,10 @@ export type Project = {
   maxHeight?: number;
 };
 
+/** Tag colour per language; anything unlisted keeps the card's own colour. */
+export const LANGUAGE_COLORS: Record<string, string> = {
+  Rust: '#CE422B',
+  TypeScript: '#3178C6'
+};
+
 export const projects = data as Project[];

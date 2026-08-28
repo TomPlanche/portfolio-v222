@@ -3,8 +3,9 @@
 
   import Globe from '$lib/components/Globe.svelte';
   import ImageReveal from '$lib/components/ImageReveal.svelte';
+  import Tag from '$lib/components/Tag.svelte';
   import { geolocation } from '$lib/geolocation.svelte';
-  import type { Project } from '$lib/projects';
+  import { LANGUAGE_COLORS, type Project } from '$lib/projects';
 
   let { projects }: { projects: Project[] } = $props();
 
@@ -28,15 +29,8 @@
         <div class="project-header">
           <span class="project-name">{project.name}</span>
           <span class="project-tags">
-            <span
-              class="tag"
-              style={project.language === 'Rust'
-                ? 'color: #CE422B; border-color: #CE422B;'
-                : project.language === 'TypeScript'
-                  ? 'color: #3178C6; border-color: #3178C6;'
-                  : ''}>{project.language}</span
-            >
-            <span class="tag tag--role">{project.role}</span>
+            <Tag color={LANGUAGE_COLORS[project.language]}>{project.language}</Tag>
+            <Tag muted>{project.role}</Tag>
           </span>
         </div>
         <p class="project-description">{project.description}</p>
@@ -124,19 +118,6 @@
     display: flex;
     gap: 0.5rem;
     flex-shrink: 0;
-  }
-
-  .tag {
-    font-family: 'Supply Mono', monospace;
-    font-size: 0.7rem;
-    padding: 0.25rem 0.4rem 0.15rem;
-    border: 1px dotted currentColor;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .tag--role {
-    opacity: 0.8;
   }
 
   .project-description {

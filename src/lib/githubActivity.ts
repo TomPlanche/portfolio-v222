@@ -50,6 +50,20 @@ export const ACTIVITY_LABELS: Record<ActivityKind, string> = {
   star: 'starred'
 };
 
+/**
+ * The other half of what a kind drives: the colour of its tag. Borrowed from
+ * GitHub's own state colours, which read as state before they read as
+ * decoration.
+ */
+export const ACTIVITY_COLORS: Record<ActivityKind, string> = {
+  'pr-opened': '#3fb950',
+  'pr-merged': '#a371f7',
+  'pr-closed': '#f85149',
+  'issue-opened': '#3fb950',
+  'issue-closed': '#f85149',
+  star: '#d29922'
+};
+
 const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['year', 365 * 24 * 60 * 60],
   ['month', 30 * 24 * 60 * 60],

@@ -14,7 +14,7 @@
     { href: 'https://github.com/tomplanche', title: 'github' },
     { href: 'mailto:tomplanche@proton.me', title: 'mail' },
     { href: 'https://linkedin.com/in/tom-planche', title: 'linkedin' },
-    { href: 'https://api.tomplanche.com/static/CV_PLANCHE-TOM_2026.pdf', title: 'resume' }
+    { href: 'https://api.tomplanche.com/static/tom-planche-resume-en.pdf', title: 'resume' }
   ];
 </script>
 

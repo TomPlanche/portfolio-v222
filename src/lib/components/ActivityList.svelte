@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Tag from '$lib/components/Tag.svelte';
   import {
+    ACTIVITY_COLORS,
     ACTIVITY_LABELS,
     formatAbsolute,
     formatRelative,
@@ -34,7 +36,7 @@
       <li class="activity-item" class:activity-item--extra={index >= compactLimit}>
         <a href={event.url} target="_blank" rel="noopener noreferrer">
           <div class="activity-header">
-            <span class="tag tag--{event.kind}">{ACTIVITY_LABELS[event.kind]}</span>
+            <Tag color={ACTIVITY_COLORS[event.kind]}>{ACTIVITY_LABELS[event.kind]}</Tag>
             <time class="activity-date" datetime={event.at} title={formatAbsolute(event.at)}>
               {formatRelative(event.at, now)}
             </time>
@@ -117,36 +119,6 @@
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
-  }
-
-  .tag {
-    font-family: 'Supply Mono', monospace;
-    font-size: 0.7rem;
-    padding: 0.25rem 0.4rem 0.15rem;
-    border: 1px dotted currentColor;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    flex-shrink: 0;
-  }
-
-  // Borrowed from GitHub's own state colours, which read as state before they
-  // read as decoration.
-  .tag--pr-opened,
-  .tag--issue-opened {
-    color: #3fb950;
-  }
-
-  .tag--pr-merged {
-    color: #a371f7;
-  }
-
-  .tag--pr-closed,
-  .tag--issue-closed {
-    color: #f85149;
-  }
-
-  .tag--star {
-    color: #d29922;
   }
 
   .activity-date {

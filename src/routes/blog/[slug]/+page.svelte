@@ -1,5 +1,6 @@
 <script lang="ts">
   import { formatDate } from '$lib/posts';
+  import BackToTop from '$lib/components/BackToTop.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
   import type { PageProps } from './$types';
 
@@ -26,6 +27,7 @@
 
   <aside class="rail">
     <TableOfContents container={prose} />
+    <BackToTop />
   </aside>
 </div>
 
@@ -68,9 +70,13 @@
       gap: 2.5rem;
     }
 
-    // The component scrolls its own list when it outgrows the viewport.
+    // The table of contents scrolls its own list when it outgrows the
+    // viewport; the button sits under it.
     .rail {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 1.5rem;
       position: sticky;
       top: 4rem;
     }

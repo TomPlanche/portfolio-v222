@@ -1,37 +1,75 @@
 <script lang="ts">
   import { formatDate } from '$lib/posts';
+  import TableOfContents from '$lib/components/TableOfContents.svelte';
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
 
   const Post = $derived(data.component);
+
+  let prose = $state<HTMLElement | null>(null);
 </script>
 
-<article>
-  <a class="back" href="/blog">&larr; writing</a>
+<div class="layout">
+  <article>
+    <a class="back" href="/blog">&larr; writing</a>
 
-  <header>
-    <h1>{data.metadata.title}</h1>
-    <time datetime={data.metadata.date}>{formatDate(data.metadata.date)}</time>
-  </header>
+    <header>
+      <h1>{data.metadata.title}</h1>
+      <time datetime={data.metadata.date}>{formatDate(data.metadata.date)}</time>
+    </header>
 
-  <div class="prose">
-    <Post />
-  </div>
-</article>
+    <div bind:this={prose} class="prose">
+      <Post />
+    </div>
+  </article>
+
+  <aside class="rail">
+    <TableOfContents container={prose} />
+  </aside>
+</div>
 
 <style lang="scss">
-  article {
+  .layout {
     width: 100%;
     max-width: 70vw;
     margin: 0 auto;
+  }
+
+  article {
+    width: 100%;
 
     font-size: 35%;
   }
 
+  // The table of contents only earns its place once there is room beside the
+  // article; under that it would eat into the prose.
+  .rail {
+    display: none;
+  }
+
+  @media (min-width: 1280px) {
+    .layout {
+      max-width: min(88vw, 78rem);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      align-items: start;
+      gap: 4rem;
+    }
+
+    .rail {
+      display: block;
+      position: sticky;
+      top: 4rem;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+
   // On mobile, go near full-width and cancel the layout's 4vmin side padding, leaving only a slim gutter.
   @media (max-width: 767px) {
-    article {
+    .layout {
       max-width: 99%;
     }
   }

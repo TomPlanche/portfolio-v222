@@ -10,6 +10,7 @@
 //   GITHUB_ACTIVITY_COMPACT_LIMIT  how many a narrow one shows (default 6)
 //   GITHUB_ACTIVITY_MAX_STARS      how many of those may be stars (default 3)
 //   GITHUB_ACTIVITY_HIDDEN_REPOS   comma-separated repositories to leave out
+//   GITHUB_ACTIVITY_HIDDEN_TITLES  comma-separated PR title markers to leave out
 //
 // They are read through `$env/dynamic/private`, so they come from the process
 // environment at runtime. `vite dev` loads `.env` on its own; the built server
@@ -33,6 +34,20 @@ import type { ActivityEvent, ActivityFeed } from '$lib/githubActivity';
  * and anything deployment-specific can stay in the environment.
  */
 const ALWAYS_HIDDEN_REPOS: string[] = [];
+
+/**
+ * Pull request titles kept out of the feed no matter what the environment says.
+ *
+ * An entry hides any pull request whose title contains it, matched
+ * case-insensitively: `[chore]` covers `[CHORE] Bump deps` and `[Chore] tidy up`
+ * alike. Chores are the reason this exists; they are real work but they say
+ * nothing about what I am building. Issues and stars are left alone, these
+ * markers are a pull request convention.
+ *
+ * `GITHUB_ACTIVITY_HIDDEN_TITLES` adds to this list rather than replacing it,
+ * on the same reasoning as `ALWAYS_HIDDEN_REPOS`.
+ */
+const ALWAYS_HIDDEN_TITLES: string[] = ['[chore]'];
 
 /** Stars are frequent enough to drown everything else; keep the feed about work. */
 const DEFAULT_MAX_STARS = 3;
@@ -133,7 +148,7 @@ const newestFirst = (a: ActivityEvent, b: ActivityEvent): number =>
   new Date(b.at).getTime() - new Date(a.at).getTime();
 
 /** Splits a comma-separated list, dropping blanks so a trailing comma is harmless. */
-const parseRepoList = (raw: string | undefined): string[] =>
+const parseList = (raw: string | undefined): string[] =>
   (raw ?? '')
     .split(',')
     .map((entry) => entry.trim().toLowerCase())
@@ -159,13 +174,27 @@ const isHidden = (repository: string, hiddenRepos: string[]): boolean => {
   return hiddenRepos.some((entry) => entry === name || entry === owner || entry === `${owner}/*`);
 };
 
+/** Substring match, so a marker can sit anywhere in the title, not just in front. */
+const hasHiddenTitle = (title: string, hiddenTitles: string[]): boolean => {
+  const name = title.toLowerCase();
+
+  return hiddenTitles.some((entry) => name.includes(entry));
+};
+
 type FeedConfig = {
   hiddenRepos: string[];
+  hiddenTitles: string[];
   maxStars: number;
 };
 
-const toEvents = (snapshot: Snapshot, { hiddenRepos, maxStars }: FeedConfig): ActivityEvent[] => {
+const toEvents = (
+  snapshot: Snapshot,
+  { hiddenRepos, hiddenTitles, maxStars }: FeedConfig
+): ActivityEvent[] => {
   const shown = (event: ActivityEvent): boolean => !isHidden(event.repository, hiddenRepos);
+
+  const shownPullRequest = (event: ActivityEvent): boolean =>
+    shown(event) && !hasHiddenTitle(event.title, hiddenTitles);
 
   // Filtered before the cap, so a hidden repository never costs a star its slot.
   const stars = (snapshot.starred ?? [])
@@ -175,7 +204,7 @@ const toEvents = (snapshot: Snapshot, { hiddenRepos, maxStars }: FeedConfig): Ac
     .slice(0, maxStars);
 
   return [
-    ...(snapshot.pull_requests ?? []).map(pullRequestEvent).filter(shown),
+    ...(snapshot.pull_requests ?? []).map(pullRequestEvent).filter(shownPullRequest),
     ...(snapshot.issues ?? []).map(issueEvent).filter(shown),
     ...stars
   ]
@@ -188,8 +217,8 @@ const toEvents = (snapshot: Snapshot, { hiddenRepos, maxStars }: FeedConfig): Ac
  * anything that leaves size and mtime alone left the contents alone too. The
  * config joins in because it decides what the parse keeps.
  */
-const signatureOf = (stats: Stats, { hiddenRepos, maxStars }: FeedConfig): string =>
-  `${stats.mtimeMs}:${stats.size}:${maxStars}:${hiddenRepos.join('|')}`;
+const signatureOf = (stats: Stats, { hiddenRepos, hiddenTitles, maxStars }: FeedConfig): string =>
+  `${stats.mtimeMs}:${stats.size}:${maxStars}:${hiddenRepos.join('|')}:${hiddenTitles.join('|')}`;
 
 let cache: { events: ActivityEvent[]; signature: string } | null = null;
 
@@ -202,6 +231,8 @@ type Options = {
   maxStars?: number;
   /** Repositories to leave out, in the shapes documented on `ALWAYS_HIDDEN_REPOS`. */
   hiddenRepos?: string[];
+  /** Pull request title markers to leave out, per `ALWAYS_HIDDEN_TITLES`. */
+  hiddenTitles?: string[];
 };
 
 /**
@@ -245,7 +276,10 @@ export const loadRecentActivity = async (options: Options = {}): Promise<Activit
       parseCount(env.GITHUB_ACTIVITY_MAX_STARS, DEFAULT_MAX_STARS, 'GITHUB_ACTIVITY_MAX_STARS'),
     hiddenRepos:
       options.hiddenRepos ??
-      parseRepoList([...ALWAYS_HIDDEN_REPOS, env.GITHUB_ACTIVITY_HIDDEN_REPOS ?? ''].join(','))
+      parseList([...ALWAYS_HIDDEN_REPOS, env.GITHUB_ACTIVITY_HIDDEN_REPOS ?? ''].join(',')),
+    hiddenTitles:
+      options.hiddenTitles ??
+      parseList([...ALWAYS_HIDDEN_TITLES, env.GITHUB_ACTIVITY_HIDDEN_TITLES ?? ''].join(','))
   };
 
   try {

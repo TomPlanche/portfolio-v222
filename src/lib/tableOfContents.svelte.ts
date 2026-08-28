@@ -1,14 +1,40 @@
+/**
+ * Geometry of the rail drawn beside the list, in pixels.
+ *
+ * Kept here because the same numbers drive both the SVG path built below and
+ * the text indentation applied in CSS; the component hands them to the
+ * stylesheet as custom properties so the two can never drift apart.
+ */
+export const RAIL = {
+  /** Horizontal position of the rail for a top-level heading. */
+  x: 8.5,
+  /** How far the rail, and the text with it, shifts for each level down. */
+  step: 8,
+  /** Distance from the rail to the start of the text. */
+  textGap: 11.5,
+  /** How far the straight run beside an item stops short of its edges. */
+  inset: 6,
+  /** Reach of the bezier control points that join two runs. */
+  curve: 8
+} as const;
+
 /** A heading picked up from the article, ready to be linked to. */
 export type TocHeading = {
   id: string;
   text: string;
   /** 2 for `<h2>`, 3 for `<h3>`, and so on. */
   level: number;
+  /** Level relative to the shallowest heading of the article, starting at 0. */
+  depth: number;
   element: HTMLElement;
 };
 
-/** A heading plus the deeper headings that sit under it. */
-export type TocNode = TocHeading & { children: TocNode[] };
+/** The straight run of rail drawn beside one item. */
+export type RailSegment = {
+  top: number;
+  bottom: number;
+  x: number;
+};
 
 export type TableOfContentsOptions = {
   /** The element whose headings make up the table. Read reactively. */
@@ -49,12 +75,15 @@ const uniqueId = (base: string, taken: Set<string>): string => {
  * List the headings of `container`, giving an `id` to the ones that lack one so
  * they can be linked to. Posts are hand-written Svelte components, so most
  * headings arrive without an anchor.
+ *
+ * Depth is measured against the shallowest heading found rather than against
+ * `<h1>`, so an article built entirely out of `<h3>` is not indented as a whole.
  */
 const collectHeadings = (container: HTMLElement, selector: string): TocHeading[] => {
   const elements = Array.from(container.querySelectorAll<HTMLElement>(selector));
   const taken = new Set(elements.map((element) => element.id).filter(Boolean));
 
-  return elements.map((element) => {
+  const found = elements.map((element) => {
     const text = element.textContent?.trim() ?? '';
 
     if (!element.id) {
@@ -65,30 +94,49 @@ const collectHeadings = (container: HTMLElement, selector: string): TocHeading[]
       id: element.id,
       text,
       level: Number(element.tagName.slice(1)),
+      depth: 0,
       element
     };
   });
+
+  const shallowest = Math.min(...found.map((heading) => heading.level));
+
+  return found.map((heading) => ({ ...heading, depth: heading.level - shallowest }));
 };
 
-/** Turn the flat heading list into a tree, nesting each heading under the last shallower one. */
-const buildTree = (headings: TocHeading[]): TocNode[] => {
-  const roots: TocNode[] = [];
-  const ancestors: TocNode[] = [];
-
-  for (const heading of headings) {
-    const node: TocNode = { ...heading, children: [] };
-
-    while (ancestors.length > 0 && ancestors[ancestors.length - 1].level >= node.level) {
-      ancestors.pop();
-    }
-
-    const parent = ancestors[ancestors.length - 1];
-    (parent ? parent.children : roots).push(node);
-    ancestors.push(node);
+/**
+ * Draw the rail: a straight run beside every item, joined by beziers that swing
+ * the line sideways wherever the depth changes.
+ */
+export const buildRailPath = (segments: RailSegment[]): string => {
+  if (segments.length === 0) {
+    return '';
   }
 
-  return roots;
+  const parts = [`M${segments[0].x} ${segments[0].top}`];
+
+  segments.forEach((segment, index) => {
+    if (index > 0) {
+      const previous = segments[index - 1];
+
+      parts.push(
+        `C ${previous.x} ${previous.bottom + RAIL.curve}` +
+          ` ${segment.x} ${segment.top - RAIL.curve}` +
+          ` ${segment.x} ${segment.top}`
+      );
+    }
+
+    parts.push(`L${segment.x} ${segment.bottom}`);
+  });
+
+  return parts.join(' ');
 };
+
+/** The band of rail to reveal for the active item, as a `clip-path` value. */
+export const clipFor = (segment: RailSegment | null): string =>
+  segment
+    ? `polygon(0 ${segment.top}px, 100% ${segment.top}px, 100% ${segment.bottom}px, 0 ${segment.bottom}px)`
+    : 'polygon(0 0, 0 0, 0 0, 0 0)';
 
 /**
  * Slack, in pixels, around the offset line. Scrolling to a heading lands it on
@@ -114,7 +162,13 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
   let activeId = $state<string | null>(null);
   let hashHandled = false;
 
-  const tree = $derived(buildTree(headings));
+  // Set when a link is clicked, cleared as soon as the reader scrolls on their
+  // own. The last headings of an article sit closer to the bottom of the page
+  // than the offset line, so the page runs out of scroll before they reach it;
+  // without this the item you just clicked would never be the one lit up.
+  let pinnedId: string | null = null;
+
+  const activeIndex = $derived(headings.findIndex((heading) => heading.id === activeId));
 
   const scrollToHeading = (heading: TocHeading, behavior: ScrollBehavior) => {
     window.scrollTo({
@@ -137,9 +191,9 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
     // Returns the list rather than reading `headings` back: reading the state
     // this effect writes would make the effect re-trigger itself.
     const scan = (): TocHeading[] => {
-      const found = collectHeadings(container, selector);
-      headings = found;
-      return found;
+      const list = collectHeadings(container, selector);
+      headings = list;
+      return list;
     };
 
     const found = scan();
@@ -198,6 +252,11 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
     const update = () => {
       frame = 0;
 
+      if (pinnedId !== null) {
+        activeId = pinnedId;
+        return;
+      }
+
       const scrolled = window.scrollY + window.innerHeight;
       const atBottom = scrolled >= document.documentElement.scrollHeight - 2;
 
@@ -224,9 +283,20 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
       frame ||= requestAnimationFrame(update);
     };
 
+    // Scrolling by hand hands control back to the offset line.
+    const unpin = () => {
+      if (pinnedId !== null) {
+        pinnedId = null;
+        schedule();
+      }
+    };
+
     update();
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+    window.addEventListener('wheel', unpin, { passive: true });
+    window.addEventListener('touchmove', unpin, { passive: true });
+    window.addEventListener('keydown', unpin);
 
     return () => {
       if (frame) {
@@ -235,6 +305,9 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
 
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
+      window.removeEventListener('wheel', unpin);
+      window.removeEventListener('touchmove', unpin);
+      window.removeEventListener('keydown', unpin);
     };
   });
 
@@ -250,6 +323,7 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
 
     // `replaceState` so the back button still leaves the article.
     history.replaceState(history.state, '', `#${id}`);
+    pinnedId = id;
     activeId = id;
   };
 
@@ -257,11 +331,11 @@ export const createTableOfContents = (options: TableOfContentsOptions) => {
     get headings() {
       return headings;
     },
-    get tree() {
-      return tree;
-    },
     get activeId() {
       return activeId;
+    },
+    get activeIndex() {
+      return activeIndex;
     },
     goTo
   };

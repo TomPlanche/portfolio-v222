@@ -89,17 +89,18 @@
 
 <p>The traffic revealed a two-step authentication flow.</p>
 
-<p>
-  <strong>Step 1</strong> is <code>POST /users/custom/authenticate/email/v2</code>, which sends only
-  the email address. The server most likely uses this to check whether the account exists and what
-  login method it should use.
-</p>
+<h3>Step 1: does this account exist?</h3>
 
 <p>
-  <strong>Step 2</strong> is <code>POST /users/custom/authenticate/v2</code>, which sends the
-  credentials plus some device metadata. It returns a raw JWT (no <code>Bearer</code> prefix) and
-  the
-  <code>userId</code>.
+  <code>POST /users/custom/authenticate/email/v2</code> sends only the email address. The server most
+  likely uses this to check whether the account exists and what login method it should use.
+</p>
+
+<h3>Step 2: credentials and a fake phone</h3>
+
+<p>
+  <code>POST /users/custom/authenticate/v2</code> sends the credentials plus some device metadata.
+  It returns a raw JWT (no <code>Bearer</code> prefix) and the <code>userId</code>.
 </p>
 
 <p>
@@ -140,6 +141,8 @@
 
 <h2>Booking (and un-booking)</h2>
 
+<h3>One endpoint, two meanings</h3>
+
 <p>
   This is the part I like the most. Booking and cancelling are the <em>same</em> endpoint:
   <code>POST /sessions/book/licenseeFromClub</code>. What decides between the two is the
@@ -161,15 +164,17 @@
   <code>sessionId</code>, and POST it with <code>isPresent: "yes"</code>.
 </p>
 
+<h3>Why 200 OK does not mean booked</h3>
+
 <p>
-  There is one subtlety I only spotted after a booking silently failed: a <code>200 OK</code> on this
-  endpoint does <em>not</em> mean the booking went through. The real outcome lives in the response
-  body, not the HTTP status. A confirmed booking comes back either as a record with an <code>_id</code>
+  There is one subtlety I only spotted after a booking silently failed: a <code>200 OK</code> on
+  this endpoint does <em>not</em> mean the booking went through. The real outcome lives in the
+  response body, not the HTTP status. A confirmed booking comes back either as a record with an
+  <code>_id</code>
   or with <code>status: "success"</code>. A soft rejection returns a different
   <code>status</code> plus a message, for example <code>status: "noCredits"</code> when the account
   has hit its reservation limit. So the bot treats only an explicit non-<code>success</code> status as
-  a failure, and it does not retry those, because retrying a "you have no credits left" answer never
-  helps.
+  a failure, and it does not retry those, because retrying a "you have no credits left" answer never helps.
 </p>
 
 <h2>The timing problem, solved by a status code</h2>
@@ -221,46 +226,57 @@
   and it comes in two flavours.
 </p>
 
-<p>
-  The first is an interactive terminal CLI. It logs in, then drops me into a menu: list every
-  upcoming session, book one (with the 409-retry loop above), view or cancel my existing bookings,
-  browse past sessions, or even compare the attendee lists of two sessions to see who else is
-  coming. When more than one account is configured it also asks who to book for, so a single run can
-  grab the same slot for several people. There is also a <code>prebook</code> command for the rare
-  genuinely time-gated slot: I pick a session and a target time, and it sleeps until then before
-  running the same retry loop.
-</p>
+<h3>The terminal CLI</h3>
 
 <p>
-  The second is a Discord bot with the same powers, exposed as slash commands (<code>/list</code>,
-  <code>/book</code>, <code>/cancel</code>, <code>/prebook</code>, <code>/bookings</code>, and a
-  per-booking <code>/booking</code> detail view), so a friend and I can book straight from our group
-  chat. If a single-target <code>/book</code> comes back with a 409, a background task keeps retrying
-  and sends a follow-up message once the slot is confirmed.
+  It logs in, then drops me into a menu: list every upcoming session, book one (with the 409-retry
+  loop above), view or cancel my existing bookings, browse past sessions, or even compare the
+  attendee lists of two sessions to see who else is coming. When more than one account is configured
+  it also asks who to book for, so a single run can grab the same slot for several people. There is
+  also a <code>prebook</code> command for the rare genuinely time-gated slot: I pick a session and a target
+  time, and it sleeps until then before running the same retry loop.
+</p>
+
+<h3>The Discord bot</h3>
+
+<p>
+  Same powers, exposed as slash commands (<code>/list</code>, <code>/book</code>,
+  <code>/cancel</code>, <code>/prebook</code>, <code>/bookings</code>, and a per-booking
+  <code>/booking</code> detail view), so a friend and I can book straight from our group chat. If a
+  single-target <code>/book</code> comes back with a 409, a background task keeps retrying and sends a
+  follow-up message once the slot is confirmed.
 </p>
 
 <h2>Booking for the whole group</h2>
 
+<h3>Several accounts, one command</h3>
+
 <p>
-  The feature that turned this from "my tool" into "our tool" is multi-user booking. Each of us has our
-  own MonClub account, so the bot can hold several sets of credentials at once: the primary account
-  comes from the environment, and extra people live in a small gitignored <code>users.json</code> that
-  maps each account to a Discord user. Once that is set up, <code>/book</code> and <code>/cancel</code>
+  The feature that turned this from "my tool" into "our tool" is multi-user booking. Each of us has
+  our own MonClub account, so the bot can hold several sets of credentials at once: the primary
+  account comes from the environment, and extra people live in a small gitignored <code
+    >users.json</code
+  >
+  that maps each account to a Discord user. Once that is set up, <code>/book</code> and
+  <code>/cancel</code>
   take an optional list of people (<code>@tom @nils</code>, raw Discord ids, labels, or
-  <code>@everyone</code> for every configured account), and the bot books or cancels for all of them in
-  one command. Cancelling is per-person: for each target it looks up <em>that</em> account's own booking
+  <code>@everyone</code> for every configured account), and the bot books or cancels for all of them
+  in one command. Cancelling is per-person: for each target it looks up <em>that</em> account's own booking
   for the session and cancels it.
 </p>
 
+<h3>All or nothing</h3>
+
 <p>
-  Booking a group brought a problem a single booking never had: partial failure. If I book four people
-  and the third one is out of credits, I do not want to end up with two friends booked and two not,
-  especially for a slot where the remaining spots may already be gone. So group bookings are
-  <strong>atomic</strong>. The bot books each account in turn, and the moment one fails, for any reason
-  (no credits, an error, or the slot simply not being open yet), it rolls back by cancelling every
-  booking it already made in that batch. Either the whole group gets in, or nobody does and the state
-  is left exactly as it was. It is the same all-or-nothing guarantee a database transaction gives you,
-  built out of two API calls and a bit of bookkeeping.
+  Booking a group brought a problem a single booking never had: partial failure. If I book four
+  people and the third one is out of credits, I do not want to end up with two friends booked and
+  two not, especially for a slot where the remaining spots may already be gone. So group bookings
+  are
+  <strong>atomic</strong>. The bot books each account in turn, and the moment one fails, for any
+  reason (no credits, an error, or the slot simply not being open yet), it rolls back by cancelling
+  every booking it already made in that batch. Either the whole group gets in, or nobody does and
+  the state is left exactly as it was. It is the same all-or-nothing guarantee a database
+  transaction gives you, built out of two API calls and a bit of bookkeeping.
 </p>
 
 <h2>Was it worth it?</h2>

@@ -30,9 +30,10 @@
 </div>
 
 <style lang="scss">
+  // Near full-width, cancelling the layout's 4vmin side padding, leaving only a slim gutter.
   .layout {
     width: 100%;
-    max-width: 70vw;
+    max-width: 99%;
     margin: 0 auto;
   }
 
@@ -42,35 +43,45 @@
     font-size: 35%;
   }
 
-  // The table of contents only earns its place once there is room beside the
-  // article; under that it would eat into the prose.
+  // The site centres every element (`* { text-align: center }` in the reset).
+  // Inheritance cannot undo that, since the rule lands on each descendant
+  // directly, so the article ranges itself left by naming them.
+  article,
+  article :global(*) {
+    text-align: left;
+  }
+
+  // Below this there is no room for a sidebar without starving the prose.
   .rail {
     display: none;
   }
 
-  @media (min-width: 1280px) {
+  // Wide enough for both. The block stops being centred and hugs the left:
+  // the side gutters it was spending are exactly the room the list needs.
+  @media (min-width: 768px) {
     .layout {
-      max-width: min(88vw, 78rem);
+      max-width: 100%;
+      margin: 0;
       display: grid;
       grid-template-columns: minmax(0, 1fr) 14rem;
       align-items: start;
-      gap: 4rem;
+      gap: 2.5rem;
     }
 
+    // The component scrolls its own list when it outgrows the viewport.
     .rail {
       display: block;
       position: sticky;
       top: 4rem;
-      max-height: calc(100vh - 8rem);
-      overflow-y: auto;
-      overscroll-behavior: contain;
     }
   }
 
-  // On mobile, go near full-width and cancel the layout's 4vmin side padding, leaving only a slim gutter.
-  @media (max-width: 767px) {
+  // Past here the article has width to spare, so the pair is centred again.
+  @media (min-width: 1280px) {
     .layout {
-      max-width: 99%;
+      max-width: min(88vw, 78rem);
+      margin: 0 auto;
+      gap: 4rem;
     }
   }
 
@@ -116,8 +127,6 @@
 
     :global(p) {
       margin: 0 0 1.5rem;
-      text-align: justify;
-      //text-align: left;
     }
 
     :global(h2) {
@@ -148,12 +157,10 @@
     :global(ol) {
       margin: 0 0 1.5rem;
       padding-left: 1.5rem;
-      text-align: left;
     }
 
     :global(li) {
       margin-bottom: 0.5rem;
-      text-align: left;
     }
 
     :global(code) {
@@ -172,7 +179,6 @@
       border: 1px dotted currentColor;
       overflow-x: auto;
       margin: 0 0 1.5rem;
-      text-align: left;
     }
 
     /* code inside a pre block is a full snippet, not an inline token */
@@ -187,7 +193,6 @@
       padding-left: 1rem;
       border-left: 3px dotted currentColor;
       opacity: 0.8;
-      text-align: justify;
     }
   }
 </style>

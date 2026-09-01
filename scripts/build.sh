@@ -11,4 +11,4 @@ set +a
 # run `fetch_commit_info.sh` to get the latest commit info and save it to a JSON file
 bash scripts/fetch_commit_info.sh
 
-bun run build
+pnpm run build

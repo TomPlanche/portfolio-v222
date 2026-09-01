@@ -8,7 +8,7 @@ Personal portfolio site. Single-page, server-side rendered, built with a focus o
 - **TypeScript** throughout
 - **SCSS** for styles
 - **Vite** as the build tool
-- **Bun** as the package manager and runtime
+- **pnpm** as the package manager, **Node** as the runtime
 - **Node adapter** (`@sveltejs/adapter-node`) for self-hosted deployment
 
 ## Notable pieces
@@ -24,7 +24,7 @@ Both effects draw directly to a `<canvas>` element each frame using `requestAnim
 
 ### Interactive globe
 
-The projects section includes a draggable 3D globe built with a local fork of [Cobe](https://github.com/tomPlanche/cobe), linked via `bun link` while pending PRs are merged upstream. A set of satellite markers is distributed across the surface with arcs connecting them. If the visitor grants geolocation permission, their coordinates are plotted as an additional marker and arcs are drawn from the four nearest satellites to their location.
+The projects section includes a draggable 3D globe built with a fork of [Cobe](https://github.com/tomPlanche/cobe), pulled straight from its Git branch in `package.json` while pending PRs are merged upstream. A Git checkout ships no build output, so pnpm has to run the package's own build step; that is what the `allowBuilds` entry for `cobe` in `pnpm-workspace.yaml` permits. A set of satellite markers is distributed across the surface with arcs connecting them. If the visitor grants geolocation permission, their coordinates are plotted as an additional marker and arcs are drawn from the four nearest satellites to their location.
 
 ### Geolocation state
 

@@ -1,0 +1,20 @@
+# pnpm settings. This is not a monorepo: since pnpm 10, project-level pnpm
+# configuration lives in this file whether or not there is a workspace.
+
+# pnpm does not run a dependency's build scripts unless it is listed here.
+allowBuilds:
+  # Optional dependency of sass, only used by `sass --watch`, which this project
+  # never runs (Vite compiles the SCSS). Allowed anyway because its install step
+  # resolves a prebuilt binary for this platform rather than compiling.
+  '@parcel/watcher': true
+
+  # `cobe` is a git fork, and a git checkout ships no `dist`, so pnpm has to run
+  # the package's own `prepare` script to build it.
+  #
+  # The key has to be the fully resolved URL, commit hash included: pnpm rejects
+  # `cobe`, `cobe@2.0.1` and `cobe@*`. Since package.json tracks a branch rather
+  # than a commit, this hash goes stale the next time that branch moves, and the
+  # install fails again with ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED. The fix then
+  # is `pnpm approve-builds`, or pinning package.json to a commit so the spec and
+  # this key always agree.
+  'cobe@https://codeload.github.com/TomPlanche/cobe/tar.gz/7c300bdd940ffb2a1e58019945c2567911257961': true

@@ -93,7 +93,7 @@
   // Past here the article has width to spare, so the pair is centred again.
   @media (min-width: 1280px) {
     .layout {
-      max-width: min(88vw, 78rem);
+      max-width: min(88vw, 100rem);
       margin: 0 auto;
       gap: 4rem;
     }

@@ -10,6 +10,8 @@
 </script>
 
 <script lang="ts">
+  import CodeBlock from '$lib/components/CodeBlock.svelte';
+
   const authMetadata = `{
   "os":      "Android 14",
   "model":   "Phone (2)",
@@ -108,7 +110,7 @@
   values, so the bot just hardcodes a plausible-looking phone:
 </p>
 
-<pre>{authMetadata}</pre>
+<CodeBlock code={authMetadata} filename="the device the bot pretends to be" lang="json" />
 
 <p>
   After that, the JWT goes out as <code>Authorization: &lt;token&gt;</code> on every subsequent
@@ -128,7 +130,7 @@
 
 <p>To see what is already booked, there is:</p>
 
-<pre>{bookingsUrl}</pre>
+<CodeBlock code={bookingsUrl} lang="http" />
 
 <p>
   This returns the user's upcoming bookings. Each entry has a nested <code>session</code> array with
@@ -157,7 +159,7 @@
   </li>
 </ul>
 
-<pre>{participantBody}</pre>
+<CodeBlock code={participantBody} lang="json" />
 
 <p>
   So the whole "grab my slot" action boils down to: authenticate, find the right
@@ -413,9 +415,3 @@
   If you want the gory details, the full write-up and the raw traffic captures live in the
   <a href="https://github.com/TomPlanche/monclub-bot">monclub-bot repository</a>.
 </p>
-
-<style lang="scss">
-  pre {
-    font-family: 'monocraft', monospace;
-  }
-</style>

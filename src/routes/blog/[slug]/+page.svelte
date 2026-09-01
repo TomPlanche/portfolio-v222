@@ -169,7 +169,10 @@
       margin-bottom: 0.5rem;
     }
 
-    :global(code) {
+    /* Bare <code> and <pre> written straight into a post. The Code and
+       CodeBlock components bring their own styling, so they opt out here
+       instead of having to out-specify these rules. */
+    :global(code:not(.inline-code, .code__lines)) {
       font-family: 'monocraft', monospace;
       font-size: 0.9em;
       padding: 0.1em 0.35em;
@@ -178,7 +181,7 @@
       overflow-wrap: anywhere;
     }
 
-    :global(pre) {
+    :global(pre:not(.code__pre)) {
       font-family: 'monocraft', monospace;
       font-size: 0.95em;
       padding: 1rem;
@@ -188,7 +191,7 @@
     }
 
     /* code inside a pre block is a full snippet, not an inline token */
-    :global(pre code) {
+    :global(pre:not(.code__pre) code) {
       padding: 0;
       border: none;
       white-space: pre;

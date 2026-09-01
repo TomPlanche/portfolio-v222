@@ -1,6 +1,20 @@
 # pnpm settings. This is not a monorepo: since pnpm 10, project-level pnpm
 # configuration lives in this file whether or not there is a workspace.
 
+# How pnpm materialises a package out of its store. The default on Linux is
+# hardlinking, which gives two identical files the same inode, and `cobe`'s
+# build script ends on `cp src/index.d.ts dist/index.d.ts` where those two files
+# are byte-identical. `cp` refuses to copy a file onto itself, so the build
+# fails and the install dies with ERR_PNPM_PREPARE_PACKAGE. macOS never hit this
+# because pnpm clones there, which gives distinct inodes.
+#
+# `clone-or-copy` reflinks where the filesystem supports it and copies where it
+# does not; either way the two files are distinct and the build succeeds. The
+# cost is that packages are copied rather than hardlinked, so installs use more
+# disk. The better fix is upstream: `rm -f dist/index.d.ts && cp ...` in the
+# fork's build script, after which this line can go and hardlinking comes back.
+packageImportMethod: clone-or-copy
+
 # pnpm does not run a dependency's build scripts unless it is listed here.
 allowBuilds:
   # Optional dependency of sass, only used by `sass --watch`, which this project
@@ -8,13 +22,14 @@ allowBuilds:
   # resolves a prebuilt binary for this platform rather than compiling.
   '@parcel/watcher': true
 
-  # `cobe` is a git fork, and a git checkout ships no `dist`, so pnpm has to run
-  # the package's own `prepare` script to build it.
+  # `cobe` is a git fork, and pnpm insists on running a git-hosted package's
+  # `prepare` script. Setting this to `false` does not opt out: pnpm still fails
+  # with ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED, even though the fork commits an
+  # up-to-date `dist`.
   #
   # The key has to be the fully resolved URL, commit hash included: pnpm rejects
   # `cobe`, `cobe@2.0.1` and `cobe@*`. Since package.json tracks a branch rather
   # than a commit, this hash goes stale the next time that branch moves, and the
-  # install fails again with ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED. The fix then
-  # is `pnpm approve-builds`, or pinning package.json to a commit so the spec and
-  # this key always agree.
+  # install fails again. The fix then is `pnpm approve-builds`, or pinning
+  # package.json to a commit so the spec and this key always agree.
   'cobe@https://codeload.github.com/TomPlanche/cobe/tar.gz/7c300bdd940ffb2a1e58019945c2567911257961': true

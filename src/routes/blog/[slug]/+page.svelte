@@ -1,6 +1,7 @@
 <script lang="ts">
   import { formatDate } from '$lib/posts';
   import BackToTop from '$lib/components/BackToTop.svelte';
+  import Tag from '$lib/components/Tag.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
   import type { PageProps } from './$types';
 
@@ -18,6 +19,13 @@
     <header>
       <h1>{data.metadata.title}</h1>
       <time datetime={data.metadata.date}>{formatDate(data.metadata.date)}</time>
+      {#if data.metadata.tags?.length}
+        <div class="tags">
+          {#each data.metadata.tags as tag (tag)}
+            <Tag>{tag}</Tag>
+          {/each}
+        </div>
+      {/if}
     </header>
 
     <div bind:this={prose} class="prose">
@@ -122,6 +130,14 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
       opacity: 0.7;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      opacity: 0.8;
     }
   }
 

@@ -8,7 +8,7 @@
 <section id="blog">
   <h2>Writing.</h2>
 
-  <PostsList posts={data.posts} />
+  <PostsList posts={data.posts} showTags />
 </section>
 
 <style lang="scss">

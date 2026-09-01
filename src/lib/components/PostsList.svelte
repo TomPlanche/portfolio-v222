@@ -1,7 +1,14 @@
 <script lang="ts">
+  import Tag from '$lib/components/Tag.svelte';
   import { formatDate, type Post } from '$lib/posts';
 
-  let { posts }: { posts: Post[] } = $props();
+  type Props = {
+    posts: Post[];
+    /** Show each post's tags under its description. Off on the home page, where the list is a teaser. */
+    showTags?: boolean;
+  };
+
+  let { posts, showTags = false }: Props = $props();
 </script>
 
 {#if posts.length === 0}
@@ -12,11 +19,20 @@
       <li class="post-item">
         <a href="/blog/{post.slug}">
           <div class="post-header">
-            <span class="post-name">{post.title}</span>
+            <span class="post-name">
+              {post.title}
+            </span>
             <time class="post-date" datetime={post.date}>{formatDate(post.date)}</time>
           </div>
           {#if post.description}
             <p class="post-description">{post.description}</p>
+          {/if}
+          {#if showTags && post.tags?.length}
+            <span class="post-tags">
+              {#each post.tags as tag (tag)}
+                <Tag>{tag}</Tag>
+              {/each}
+            </span>
           {/if}
         </a>
       </li>
@@ -84,6 +100,13 @@
     letter-spacing: 0.1em;
     opacity: 0.7;
     flex-shrink: 0;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   .post-description {

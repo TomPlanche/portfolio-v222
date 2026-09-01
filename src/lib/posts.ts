@@ -20,6 +20,7 @@ export type PostMetadata = {
   title: string;
   date: string; // ISO date, e.g. "2026-06-29"
   description?: string;
+  tags?: string[]; // free-form topics, e.g. ["rust", "side-project"]
   draft?: boolean;
 };
 

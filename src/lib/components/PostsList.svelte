@@ -1,6 +1,7 @@
 <script lang="ts">
   import Tag from '$lib/components/Tag.svelte';
   import { formatDate, type Post } from '$lib/posts';
+  import { tagColor } from '$lib/tagColors';
 
   type Props = {
     posts: Post[];
@@ -30,7 +31,7 @@
           {#if showTags && post.tags?.length}
             <span class="post-tags">
               {#each post.tags as tag (tag)}
-                <Tag>{tag}</Tag>
+                <Tag color={tagColor(tag)}>{tag}</Tag>
               {/each}
             </span>
           {/if}

@@ -3,6 +3,7 @@
   import BackToTop from '$lib/components/BackToTop.svelte';
   import Tag from '$lib/components/Tag.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
+  import { tagColor } from '$lib/tagColors';
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
@@ -22,7 +23,7 @@
       {#if data.metadata.tags?.length}
         <div class="tags">
           {#each data.metadata.tags as tag (tag)}
-            <Tag>{tag}</Tag>
+            <Tag color={tagColor(tag)}>{tag}</Tag>
           {/each}
         </div>
       {/if}
@@ -137,7 +138,7 @@
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-top: 1rem;
-      opacity: 0.8;
+      font-weight: bold;
     }
   }
 

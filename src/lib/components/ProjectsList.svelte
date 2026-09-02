@@ -5,7 +5,8 @@
   import ImageReveal from '$lib/components/ImageReveal.svelte';
   import Tag from '$lib/components/Tag.svelte';
   import { geolocation } from '$lib/geolocation.svelte';
-  import { LANGUAGE_COLORS, type Project } from '$lib/projects';
+  import type { Project } from '$lib/projects';
+  import { tagColor } from '$lib/tagColors';
 
   let { projects }: { projects: Project[] } = $props();
 
@@ -29,7 +30,7 @@
         <div class="project-header">
           <span class="project-name">{project.name}</span>
           <span class="project-tags">
-            <Tag color={LANGUAGE_COLORS[project.language]}>{project.language}</Tag>
+            <Tag color={tagColor(project.language)}>{project.language}</Tag>
             <Tag muted>{project.role}</Tag>
           </span>
         </div>

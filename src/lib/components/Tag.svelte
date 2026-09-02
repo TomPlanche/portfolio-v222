@@ -22,6 +22,7 @@
     font-size: 0.7rem;
     padding: 0.27rem 0.4rem 0.13rem;
     border: 1px dotted currentColor;
+    background: color-mix(in srgb, currentColor 20%, transparent);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     flex-shrink: 0;

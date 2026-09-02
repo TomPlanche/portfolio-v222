@@ -10,6 +10,7 @@ Personal portfolio site. Single-page, server-side rendered, built with a focus o
 - **Vite** as the build tool
 - **pnpm** as the package manager, **Node** as the runtime
 - **Node adapter** (`@sveltejs/adapter-node`) for self-hosted deployment
+- **Rust** for [`md-to-blog-post`](md-to-blog-post/README.md), the converter that turns a Markdown note into a blog post
 
 ## Notable pieces
 
@@ -38,3 +39,17 @@ A fixed, full-viewport `<div>` tiled with a looping noise GIF sits above everyth
 
 The footer pulls the latest Git commit SHA and URL from the GitHub API at request time (via the SvelteKit layout server load). It links directly to the commit on GitHub.
 
+### Blog posts
+
+A post is a plain Svelte component in `src/lib/posts/`, but it is not written by hand: it is generated from a Markdown note by [`md-to-blog-post`](md-to-blog-post/README.md), a small Rust CLI kept in this repository.
+
+The note is a [selfnotes](https://github.com/tomplanche/selfnotes) note, read the way `selfnotes` reads it. Its `+++` TOML frontmatter and its inline `#tags` prefill the post's `metadata` (title, date, description, tags, draft), each field falling back to the body, the file path, then the file name when the frontmatter says nothing. The body becomes the semantic HTML the `.prose` wrapper styles: fenced code blocks are lifted into `CodeBlock` components with their language, file name and highlight options taken from the info string, inline code becomes `<Code>`, `[[wikilinks]]` become `/blog/<slug>` links, and braces and inline HTML are escaped so Svelte does not read them as markup or as an expression.
+
+The notes live next to the posts, in `src/lib/posts/sources/`. `scripts/transcribe-posts.sh` builds the converter and re-transcribes every note, or just the ones named on the command line:
+
+```sh
+scripts/transcribe-posts.sh                 # every note in sources/
+scripts/transcribe-posts.sh monclub-bot     # just that one, by slug
+```
+
+A generated post is always overwritten rather than merged, so the note is the thing to edit. The converter's own [README](md-to-blog-post/README.md) documents every flag and every code-block option.

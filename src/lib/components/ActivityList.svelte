@@ -57,11 +57,14 @@
         </a>
       </li>
     {/each}
-  </ul>
 
-  <p class="activity-more">
-    <a href={profileUrl} target="_blank" rel="noopener noreferrer">everything on github</a>
-  </p>
+    <li class="activity-item activity-item--more">
+      <a href={profileUrl} target="_blank" rel="noopener noreferrer">
+        <span>everything on github</span>
+        <span class="activity-more-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+  </ul>
 {/if}
 
 <style lang="scss">
@@ -159,36 +162,34 @@
     text-wrap: pretty;
   }
 
-  .activity-more {
-    font-family: 'Supply Mono', monospace;
-    font-size: 1rem;
-    letter-spacing: 0.08em;
-    padding: 1.5rem 2rem 0;
-    text-align: left;
-    margin: 0;
+  // Closes the feed as one wide row, whatever the column count above it.
+  .activity-item--more {
+    grid-column: 1 / -1;
 
     a {
-      color: inherit;
-      text-decoration: none;
-      border-bottom: 1px dotted currentColor;
-      opacity: 0.6;
-      transition: opacity 0.15s ease;
-
-      &:hover {
-        opacity: 1;
-        border-bottom-style: solid;
-      }
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-family: 'Supply Mono', monospace;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      opacity: 0.9;
     }
+
+    a:hover {
+      opacity: 1;
+    }
+  }
+
+  .activity-more-arrow {
+    flex-shrink: 0;
   }
 
   @media (max-width: 767px) {
     .activity-list,
     .empty {
       padding: 2rem 0;
-    }
-
-    .activity-more {
-      padding: 1rem 0 0;
     }
   }
 

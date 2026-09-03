@@ -11,7 +11,7 @@ const TAG_COLORS: Record<string, string> = {
   typescript: '#3178C6',
   javascript: '#F0DB4F',
   svelte: '#FF3E00',
-  python: '#3776AB',
+  python: '#3776AB'
 };
 
 /** The colour for a tag, or `undefined` for anything unlisted: those keep the surrounding text colour. */

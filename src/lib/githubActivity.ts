@@ -81,7 +81,9 @@ export const formatRelative = (iso: string, now: number = Date.now()): string =>
   const magnitude = Math.abs(seconds);
 
   for (const [unit, size] of UNITS) {
-    if (magnitude >= size) return RELATIVE.format(Math.round(seconds / size), unit);
+    if (magnitude >= size) {
+      return RELATIVE.format(Math.round(seconds / size), unit);
+    }
   }
 
   return 'just now';

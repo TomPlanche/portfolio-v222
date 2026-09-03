@@ -22,7 +22,6 @@
     <a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>blog</a>
     <span class="sep">/</span>
     <a href="/sifa-page" aria-current={undefined}>sifa</a>
-
   </nav>
 </header>
 

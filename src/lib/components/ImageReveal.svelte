@@ -12,15 +12,8 @@
     gap?: string;
   };
 
-  const {
-    children,
-    display,
-    flexDirection,
-    justifyContent,
-    alignItems,
-    flexWrap,
-    gap
-  }: Props = $props();
+  const { children, display, flexDirection, justifyContent, alignItems, flexWrap, gap }: Props =
+    $props();
 
   const wrapperStyle = $derived(
     [
@@ -46,10 +39,14 @@
 
   const attach = (canvas: HTMLCanvasElement) => {
     const wrapper = canvas.parentElement;
-    if (!wrapper) return;
+    if (!wrapper) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      return;
+    }
 
     let animating = false;
 
@@ -59,7 +56,9 @@
     const cover = () => {
       const w = canvas.offsetWidth;
       const h = canvas.offsetHeight;
-      if (w === 0 || h === 0) return;
+      if (w === 0 || h === 0) {
+        return;
+      }
       canvas.width = w;
       canvas.height = h;
       ctx.fillStyle = FILL_COLOR;
@@ -71,7 +70,9 @@
     // Watch for dimension changes until the animation starts (handles late-loading
     // external images whose wrapper starts at zero height).
     const ro = new ResizeObserver(() => {
-      if (!animating) cover();
+      if (!animating) {
+        cover();
+      }
     });
     ro.observe(wrapper);
 

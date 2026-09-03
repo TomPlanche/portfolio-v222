@@ -18,8 +18,8 @@ The output directory is the `src/lib/posts` found by walking up from the current
 
 ## What fills the metadata
 
-| Field         | Where it comes from, in order                                                        |
-| ------------- | ------------------------------------------------------------------------------------ |
+| Field         | Where it comes from, in order                                                          |
+| ------------- | -------------------------------------------------------------------------------------- |
 | `title`       | `--title`, frontmatter `title`, the note's leading `# Heading`, its file name          |
 | `date`        | `--date`, frontmatter `date`, a `YYYY/MM/DD` journal path, the file's modification day |
 | `description` | `--description`, frontmatter `description`, the note's first paragraph, shortened      |

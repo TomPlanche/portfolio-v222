@@ -68,7 +68,9 @@
   };
 
   const buildArcs = (): Arc[] => {
-    if (!userLocation) return satArcs;
+    if (!userLocation) {
+      return satArcs;
+    }
 
     const closest = [...satelliteMarkers]
       .sort(
@@ -153,7 +155,9 @@
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging) return;
+      if (!isDragging) {
+        return;
+      }
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {

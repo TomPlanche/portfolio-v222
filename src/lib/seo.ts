@@ -30,18 +30,20 @@ export type Seo = {
   type?: 'website' | 'article';
   /** ISO date, only meaningful for `article`. */
   publishedAt?: string;
+  /** `at://` URI of this page's `site.standard.document` record, once it has been published. See `$lib/atproto`. */
+  atUri?: string;
 };
 
 export const SITE_NAME = 'Tom Planche';
 
-const DEFAULT_DESCRIPTION = "Tom Planche's website.";
+const DEFAULT_DESCRIPTION = 'Tom Planche\'s website.';
 
 const DEFAULT_IMAGE: OgImage = {
   url: '/zoizo.png',
   type: 'image/png',
   width: 424,
   height: 440,
-  alt: "Nora's drawing of us as birds in a heart shape"
+  alt: 'Nora\'s drawing of us as birds in a heart shape'
 };
 
 export type ResolvedSeo = {
@@ -55,6 +57,7 @@ export type ResolvedSeo = {
   /** Canonical URL: origin plus pathname, query string and hash dropped. */
   url: string;
   publishedAt?: string;
+  atUri?: string;
 };
 
 /**
@@ -74,6 +77,7 @@ export const resolveSeo = (url: URL, seo?: Seo): ResolvedSeo => {
     image: { ...image, url: new URL(image.url, url.origin).href },
     type: seo?.type ?? 'website',
     url: new URL(url.pathname, url.origin).href,
-    publishedAt: seo?.publishedAt
+    publishedAt: seo?.publishedAt,
+    atUri: seo?.atUri
   };
 };

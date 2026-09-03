@@ -77,7 +77,9 @@
     let stale = false;
 
     highlight(snippet, language).then((result) => {
-      if (!stale) tokens = result;
+      if (!stale) {
+        tokens = result;
+      }
     });
 
     return () => {

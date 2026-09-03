@@ -39,6 +39,11 @@
     <meta content={seo.publishedAt} property="article:published_time" />
   {/if}
 
+  <!-- Lets ATmosphere readers (Leaflet, Frontpage, Sifa ID...) find this page's ATProto record. See $lib/atproto. -->
+  {#if seo.atUri}
+    <link rel="site.standard.document" href={seo.atUri} />
+  {/if}
+
   <!-- X falls back to the Open Graph tags, but renders nothing without this. -->
   <meta content="summary" name="twitter:card" />
 </svelte:head>

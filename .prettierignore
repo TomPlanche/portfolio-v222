@@ -7,3 +7,7 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Rust build output (md-to-blog-post/), not covered by a gitignore-derived
+# ignore since Prettier doesn't read .gitignore on its own.
+md-to-blog-post/target/

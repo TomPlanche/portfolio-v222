@@ -9,7 +9,9 @@ type CommitInfo = {
 export const load = (): { lastCommit: CommitInfo | null } => {
   const commit = commits[0];
 
-  if (!commit) return { lastCommit: null };
+  if (!commit) {
+    return { lastCommit: null };
+  }
 
   return {
     lastCommit: {

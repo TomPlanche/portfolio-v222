@@ -6,7 +6,7 @@ title = "I reverse-engineered my volleyball club booking app."
 slug = "monclub-bot"
 +++
 
-A friend and I were fed up with the booking system of the *MonClub* app our volleyball club uses.
+A friend and I were fed up with the booking system of the _MonClub_ app our volleyball club uses.
 
 A slot only opens for booking exactly six days (144 hours) in advance, at a precise time. Spots are limited and fill up almost instantly, so you have to rush onto the app the very moment booking opens.
 In practice that meant being glued to our phones at an exact minute, six days ahead. And we would regularly miss out anyway, because we were busy, away from our phones, or simply forgot. So I did the reasonable thing: I reverse-engineered the app's booking flow and built my own tool to talk to it directly, a terminal CLI and a Discord bot that book, cancel and manage sessions without ever opening the app. No more being glued to a phone at a precise minute.
@@ -46,10 +46,10 @@ The device metadata in the body turned out to be completely cosmetic. The server
 
 ```json filename="the device the bot pretends to be" name=authMetadata
 {
-	"os":      "Android 14",
-	"model":   "Phone (2)",
-	"brand":   "Nothing",
-	"version": "3.6.0"
+  "os": "Android 14",
+  "model": "Phone (2)",
+  "brand": "Nothing",
+  "version": "3.6.0"
 }
 ```
 
@@ -71,7 +71,7 @@ This returns the user's upcoming bookings. Each entry has a nested `session` arr
 
 ### One endpoint, two meanings
 
-This is the part I like the most. Booking and cancelling are the *same* endpoint:
+This is the part I like the most. Booking and cancelling are the _same_ endpoint:
 `POST /sessions/book/licenseeFromClub`.
 
 What decides between the two is the `isPresent` field inside the participant object:
@@ -81,7 +81,7 @@ What decides between the two is the `isPresent` field inside the participant obj
 
 ```json name=participantBody
 {
-	"isPresent": "yes"   // "no" to cancel (also needs bookingId)
+  "isPresent": "yes" // "no" to cancel (also needs bookingId)
 }
 ```
 
@@ -89,7 +89,7 @@ So the whole "grab my slot" action boils down to: authenticate, find the right `
 
 ### Why 200 OK does not mean booked
 
-There is one subtlety I only spotted after a booking silently failed: a `200 OK` on this endpoint does *not* mean the booking went through. The real outcome lives in the response body, not the HTTP status. A confirmed booking comes back either as a record with an `_id` or with `status: "success"`. A soft rejection returns a different `status` plus a message, for example `status: "noCredits"` when the account has hit its reservation limit. So the bot treats only an explicit non-`success` status as a failure, and it does not retry those, because retrying a "you have no credits left" answer never helps.
+There is one subtlety I only spotted after a booking silently failed: a `200 OK` on this endpoint does _not_ mean the booking went through. The real outcome lives in the response body, not the HTTP status. A confirmed booking comes back either as a record with an `_id` or with `status: "success"`. A soft rejection returns a different `status` plus a message, for example `status: "noCredits"` when the account has hit its reservation limit. So the bot treats only an explicit non-`success` status as a failure, and it does not retry those, because retrying a "you have no credits left" answer never helps.
 
 ### The waiting list you never asked for
 
@@ -132,7 +132,7 @@ Same powers, exposed as slash commands (`/list`, `/book`, `/cancel`, `/prebook`,
 
 ### Several accounts, one command
 
-The feature that turned this from "my tool" into "our tool" is multi-user booking. Each of us has our own MonClub account, so the bot can hold several sets of credentials at once: the primary account comes from the environment, and extra people live in a small gitignored `users.json` that maps each account to a Discord user. Once that is set up, `/book` and `/cancel` take an optional list of people (`@tom @nils`, raw Discord ids, labels, or `@everyone` for every configured account), and the bot books or cancels for all of them in one command. Cancelling is per-person: for each target it looks up *that* account's own booking for the session and cancels it.
+The feature that turned this from "my tool" into "our tool" is multi-user booking. Each of us has our own MonClub account, so the bot can hold several sets of credentials at once: the primary account comes from the environment, and extra people live in a small gitignored `users.json` that maps each account to a Discord user. Once that is set up, `/book` and `/cancel` take an optional list of people (`@tom @nils`, raw Discord ids, labels, or `@everyone` for every configured account), and the bot books or cancels for all of them in one command. Cancelling is per-person: for each target it looks up _that_ account's own booking for the session and cancels it.
 
 ### All or nothing
 
@@ -155,7 +155,7 @@ Two deliberate differences from the group booking above. A rejection that waitin
 
 ### Watching for sessions that do not exist yet
 
-The last watcher does not care about any particular session. Given a channel id, the bot polls the listing in the background and announces anything it has not seen before. The only subtlety is the first poll: it records what is already there without saying a word. Otherwise the channel would get the entire current listing every time the bot restarts, and only sessions that show up in a *later* poll are actually news.
+The last watcher does not care about any particular session. Given a channel id, the bot polls the listing in the background and announces anything it has not seen before. The only subtlety is the first poll: it records what is already there without saying a word. Otherwise the channel would get the entire current listing every time the bot restarts, and only sessions that show up in a _later_ poll are actually news.
 
 ## Putting the sessions in my calendar
 

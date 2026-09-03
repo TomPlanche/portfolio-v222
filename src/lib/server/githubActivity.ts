@@ -155,7 +155,9 @@ const parseList = (raw: string | undefined): string[] =>
     .filter((entry) => entry.length > 0);
 
 const parseCount = (raw: string | undefined, fallback: number, name: string): number => {
-  if (raw === undefined || raw.trim() === '') return fallback;
+  if (raw === undefined || raw.trim() === '') {
+    return fallback;
+  }
 
   const value = Number(raw);
 
@@ -285,8 +287,9 @@ export const loadRecentActivity = async (options: Options = {}): Promise<Activit
   try {
     const signature = signatureOf(await stat(path), config);
 
-    if (cache?.signature === signature)
+    if (cache?.signature === signature) {
       return { events: cache.events.slice(0, limit), compactLimit };
+    }
 
     const events = toEvents(JSON.parse(await readFile(path, 'utf8')) as Snapshot, config);
 

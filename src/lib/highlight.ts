@@ -63,11 +63,15 @@ const aliases: Record<string, Language> = {
  * is not an error: the block simply renders as plain text.
  */
 export const resolveLanguage = (lang: string | undefined): Language | null => {
-  if (!lang) return null;
+  if (!lang) {
+    return null;
+  }
 
   const key = lang.trim().toLowerCase();
 
-  if (key in grammars) return key as Language;
+  if (key in grammars) {
+    return key as Language;
+  }
 
   return aliases[key] ?? null;
 };
@@ -133,7 +137,9 @@ export const highlight = async (
 ): Promise<CodeLine[] | null> => {
   const resolved = resolveLanguage(lang);
 
-  if (!resolved) return null;
+  if (!resolved) {
+    return null;
+  }
 
   try {
     const instance = await getHighlighter();
@@ -160,14 +166,20 @@ export const highlight = async (
 export const dedent = (code: string): string => {
   const lines = code.replace(/\t/g, '  ').split('\n');
 
-  while (lines.length > 0 && lines[0].trim() === '') lines.shift();
-  while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+  while (lines.length > 0 && lines[0].trim() === '') {
+    lines.shift();
+  }
+  while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+    lines.pop();
+  }
 
   const indent = lines
     .filter((line) => line.trim() !== '')
     .reduce((min, line) => Math.min(min, line.length - line.trimStart().length), Infinity);
 
-  if (!Number.isFinite(indent) || indent === 0) return lines.join('\n');
+  if (!Number.isFinite(indent) || indent === 0) {
+    return lines.join('\n');
+  }
 
   return lines.map((line) => line.slice(indent)).join('\n');
 };
@@ -179,21 +191,29 @@ export const dedent = (code: string): string => {
 export const parseLineSelection = (selection: string | undefined): Set<number> => {
   const selected = new Set<number>();
 
-  if (!selection) return selected;
+  if (!selection) {
+    return selected;
+  }
 
   for (const part of selection.split(',')) {
     const range = part.trim();
 
-    if (range === '') continue;
+    if (range === '') {
+      continue;
+    }
 
     const [rawStart, rawEnd] = range.split('-');
     const start = Number.parseInt(rawStart, 10);
     const end = rawEnd === undefined ? start : Number.parseInt(rawEnd, 10);
 
-    if (!Number.isInteger(start) || !Number.isInteger(end)) continue;
+    if (!Number.isInteger(start) || !Number.isInteger(end)) {
+      continue;
+    }
 
     for (let line = Math.min(start, end); line <= Math.max(start, end); line++) {
-      if (line > 0) selected.add(line);
+      if (line > 0) {
+        selected.add(line);
+      }
     }
   }
 
@@ -211,8 +231,12 @@ export const tokenStyle = (token: CodeToken): string => {
   const style = [`color:${token.color ?? `var(${VARIABLE_PREFIX}foreground)`}`];
   const fontStyle = token.fontStyle ?? 0;
 
-  if (fontStyle & ITALIC) style.push('font-style:italic');
-  if (fontStyle & BOLD) style.push('font-weight:bold');
+  if (fontStyle & ITALIC) {
+    style.push('font-style:italic');
+  }
+  if (fontStyle & BOLD) {
+    style.push('font-weight:bold');
+  }
   if (fontStyle & (UNDERLINE | STRIKETHROUGH)) {
     const lines = [
       fontStyle & UNDERLINE ? 'underline' : '',

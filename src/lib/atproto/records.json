@@ -1,0 +1,13 @@
+{
+  "did": "did:plc:ybx6os5vaaksppbxwvqqciaf",
+  "publication": {
+    "rkey": "3mumewtjky2c6",
+    "payloadHash": "8b6fe0dc244837c7552deabdd8154fe9516314dc486289b3e9ab236d9a3d061a"
+  },
+  "documents": {
+    "monclub-bot": {
+      "rkey": "3mumewtrdysc6",
+      "payloadHash": "9ddcbb1ce1d5538e698c2fd0909abf8fd720806d426051a111c6cc9af2314451"
+    }
+  }
+}

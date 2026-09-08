@@ -64,4 +64,13 @@ tomplanche.com {
 }
 ```
 
-Point the server-wide Caddyfile at it with `import /path/to/portfolio-v222/deploy/*.caddy`, then run the built server with `scripts/serve.sh`, which loads `.env` before `node build/index.js`.
+Point the server-wide Caddyfile at it with `import /path/to/portfolio-v222/deploy/*.caddy`.
+
+The server itself runs under [pm2](https://pm2.keymetrics.io/), configured by `ecosystem.config.cjs`:
+
+```sh
+pm2 start ecosystem.config.cjs   # first run
+pm2 restart portfolio            # after a rebuild
+```
+
+It starts `build/index.js` with `--env-file-if-exists=.env`, so `.env` is the only place `PORT` is set: a variable already in pm2's environment would win over the file, and the build reads that same value when it writes the Caddy block. Without pm2, `scripts/serve.sh` does the equivalent from a shell.

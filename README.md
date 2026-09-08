@@ -53,3 +53,15 @@ scripts/transcribe-posts.sh monclub-bot     # just that one, by slug
 ```
 
 A generated post is always overwritten rather than merged, so the note is the thing to edit. The converter's own [README](md-to-blog-post/README.md) documents every flag and every code-block option.
+
+## Deployment
+
+The site is served by the adapter-node build behind [Caddy](https://caddyserver.com/). The reverse-proxy site block is not committed: `pnpm build` writes it to `deploy/portfolio.caddy` from `DOMAIN` (and `PORT`, default `3000`) in `.env`, so a fork or a staging host only changes those variables. When `DOMAIN` is unset the build says so and writes nothing.
+
+```
+tomplanche.com {
+	reverse_proxy localhost:3000
+}
+```
+
+Point the server-wide Caddyfile at it with `import /path/to/portfolio-v222/deploy/*.caddy`, then run the built server with `scripts/serve.sh`, which loads `.env` before `node build/index.js`.

@@ -18,6 +18,14 @@
     "maxHeight": 40
   },
   {
+    "name": "atkuzu",
+    "role": "author",
+    "url": "https://atkuzu.tomplanche.com/",
+    "description": "A daily Takuzu (Binairo) puzzle game built on the AT Protocol: players log in with their own handle and their results are written to their own PDS as records.",
+    "language": "TypeScript",
+    "medium": "/atkuzu.png"
+  },
+  {
     "name": "zed",
     "role": "contributor",
     "url": "https://github.com/zed-industries/zed/pulls?q=is%3Apr%20author%3ATomPlanche",
@@ -46,8 +54,7 @@
     "role": "contributor",
     "url": "https://github.com/kmolan/multicalc-rust/pulls?q=is%3Apr%20author%3ATomPlanche",
     "description": "A Rust scientific computing library for single and multi-variable calculus: numerical differentiation and integration, jacobians, hessians and series approximations, with no_std support.",
-    "language": "Rust",
-    "medium": "/multicalc_combined_demo_reel.gif"
+    "language": "Rust"
   },
   {
     "name": "typst",

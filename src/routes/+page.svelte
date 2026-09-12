@@ -39,7 +39,13 @@
       frontends. Currently working at
       <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
       previously at
-      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>.
+      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>. <br>
+      <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a> enjoyer, currently
+      exploring the possibilities of decentralized social networks. <br>
+      I also try to self-host things like <a href="https://git.tomplanche.com/" target="_blank"
+                                             rel="noopener noreferrer">my own Git forge</a> running on an old Raspberry
+      Pi 4, and <a href="https://tomplanche.com/" target="_blank" rel="noopener noreferrer">this website</a> running on
+      a VPS. <br>
     </p>
   </div>
 </section>

@@ -16,10 +16,10 @@
 
   const authMetadata = `
     {
-    	"os":      "Android 14",
-    	"model":   "Phone (2)",
-    	"brand":   "Nothing",
-    	"version": "3.6.0"
+      "os": "Android 14",
+      "model": "Phone (2)",
+      "brand": "Nothing",
+      "version": "3.6.0"
     }
   `;
 
@@ -29,7 +29,7 @@
 
   const participantBody = `
     {
-    	"isPresent": "yes"   // "no" to cancel (also needs bookingId)
+      "isPresent": "yes" // "no" to cancel (also needs bookingId)
     }
   `;
 </script>

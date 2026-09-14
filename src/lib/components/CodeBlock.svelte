@@ -163,7 +163,7 @@
       role="region"
       tabindex="0"
     >
-      <!-- `<svelte:element this="pre">` rather than a literal `<pre>` tag, and
+      <!-- `<svelte:element this={'pre'}>` rather than a literal `<pre>` tag, and
            not for fun: inside a real `<pre>` Svelte keeps the source whitespace
            verbatim, so the moment any formatter reflows this file it injects
            newlines and tabs between the token spans and every token lands on its
@@ -171,7 +171,7 @@
            DOM but lets Svelte drop whitespace-only nodes the way it does
            everywhere else, so the rendering no longer depends on how this file
            happens to be indented. -->
-      <svelte:element this="pre" class="code__pre">
+      <svelte:element this={'pre'} class="code__pre">
         <code class="code__lines">
           {#each rows as row (row.number)}
             <span

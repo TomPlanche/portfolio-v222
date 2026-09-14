@@ -1,0 +1,46 @@
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: right
+
+A: "A\nupstream on GitHub\n(forks only)"
+B: "B\nyour repo on GitHub"
+C: "C\nyour Forgejo mirror"
+you: "you" {
+  shape: person
+}
+
+A -> C: "pull mirror (forks only)" {
+  style: {
+    stroke-width: 3
+    animated: true
+  }
+}
+
+B -> C: "pull mirror (your own repos)" {
+  style: {
+    stroke-width: 2
+    stroke-dash: 5
+  }
+}
+
+C -> B: "push mirror (always)" {
+  style: {
+    stroke-width: 3
+    animated: true
+  }
+}
+
+you -> C: "all work happens here" {
+  style.stroke-width: 2
+}
+
+B -> A: "open a pull request" {
+  style: {
+    stroke-width: 2
+    stroke-dash: 5
+  }
+}

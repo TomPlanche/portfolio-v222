@@ -73,7 +73,7 @@
   #noise {
     pointer-events: none;
     z-index: 99999;
-    opacity: 0.06;
+    opacity: 0.02;
     background-image: url(/noise.gif);
     background-position: 0 0;
     background-size: 250px;

@@ -1,0 +1,40 @@
+vars: {
+  d2-config: {
+    layout-engine: tala
+  }
+}
+
+direction: down
+
+naive: "Naive: one repo, both directions" {
+  direction: right
+  top: 0
+  left: 151
+
+  B: "B (GitHub)"
+  C: "C (Forgejo)"
+
+  B -> C: "pull" {
+    style.animated: true
+  }
+
+  C -> B: "push" {
+    style.animated: true
+  }
+}
+
+directed: "Directed: three repos, one direction each" {
+  direction: right
+
+  A: "A (upstream)"
+  B: "B (GitHub)"
+  C: "C (Forgejo)"
+
+  A -> C: "pull" {
+    style.animated: true
+  }
+
+  C -> B: "push" {
+    style.animated: true
+  }
+}

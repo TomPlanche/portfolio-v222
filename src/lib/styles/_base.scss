@@ -49,6 +49,12 @@ body {
   box-sizing: border-box; /* Opera/IE 8+ */
 }
 
+.dotted-underline {
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
 // RESPONSIVE ------------------------------------------------------------------
 @for $i from 0 through 15 {
   @media screen and (max-width: 1440px - (80 * $i)) {

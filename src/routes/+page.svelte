@@ -39,13 +39,16 @@
       frontends. Currently working at
       <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
       previously at
-      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>. <br>
-      <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a> enjoyer, currently
-      exploring the possibilities of decentralized social networks. <br>
-      I also try to self-host things like <a href="https://git.tomplanche.com/" target="_blank"
-                                             rel="noopener noreferrer">my own Git forge</a> running on an old Raspberry
-      Pi 4, and <a href="https://tomplanche.com/" target="_blank" rel="noopener noreferrer">this website</a> running on
-      a VPS. <br>
+      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>. <br />
+      <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a>
+      enjoyer, currently exploring the possibilities of decentralized social networks. <br />
+      I also try to self-host things like
+      <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer"
+        >my own Git forge</a
+      >
+      running on an old Raspberry Pi 4, and
+      <a href="https://tomplanche.com/" target="_blank" rel="noopener noreferrer">this website</a>
+      running on a VPS. <br />
     </p>
   </div>
 </section>
@@ -73,14 +76,13 @@
 </section>
 
 <style lang="scss">
-  section {
-    height: 100%;
-    width: 100%;
+  @use '$lib/styles/sections';
 
-    display: flex;
-    flex-direction: column;
+  section {
+    @include sections.section-shell;
+
+    height: 100%;
     justify-content: center;
-    align-items: flex-start;
 
     &#about {
       display: flex;
@@ -130,27 +132,8 @@
       }
     }
 
-    padding-top: 3rem;
-
     h2 {
-      font-family: 'FK Raster Grotesk Compact Blended', monospace;
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: lowercase;
-      opacity: 0.9;
-      text-align: left;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-
-      &::after {
-        content: '';
-        flex: 1;
-        border-top: 3px dotted currentColor;
-        opacity: 0.5;
-      }
+      @include sections.section-heading;
     }
 
     > div {

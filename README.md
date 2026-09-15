@@ -54,6 +54,18 @@ scripts/transcribe-posts.sh monclub-bot     # just that one, by slug
 
 A generated post is always overwritten rather than merged, so the note is the thing to edit. The converter's own [README](md-to-blog-post/README.md) documents every flag and every code-block option.
 
+### Markdown for agents
+
+Every page answers `Accept: text/markdown` with a Markdown version of itself, so an agent reads the content instead of scraping the layout. HTML stays the default: a browser, and a bare `curl` sending the catch-all type, see no change.
+
+```sh
+curl https://tomplanche.com/blog/monclub-bot -H 'Accept: text/markdown'
+```
+
+The response is `text/markdown; charset=utf-8`, carries `Vary: Accept` so a cache keeps the two versions apart, and reports its own size in `x-markdown-tokens`. The document opens with a YAML frontmatter block holding the page's title, description, image and canonical URL, which is the shape [Cloudflare's Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) returns, so a client written against a Cloudflare zone reads this site unchanged.
+
+A blog post is served from the note it was transcribed from, which is already Markdown. Every other page is converted from the HTML it just rendered, by `src/lib/server/markdown/`, so no page has to be written twice and none can drift from its Markdown. `src/hooks.server.ts` is what picks between the two representations; the routes themselves know nothing about it.
+
 ## Deployment
 
 The site is served by the adapter-node build behind [Caddy](https://caddyserver.com/). The reverse-proxy site block is not committed: `pnpm build` writes it to `deploy/portfolio.caddy` from `DOMAIN` (and `PORT`, default `3000`) in `.env`, so a fork or a staging host only changes those variables. When `DOMAIN` is unset the build says so and writes nothing.

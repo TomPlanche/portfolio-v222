@@ -37,6 +37,17 @@ type PostModule = {
 // index and individual post pages resolve everything synchronously.
 const modules = import.meta.glob<PostModule>('./posts/*.svelte', { eager: true });
 
+// The notes the posts were transcribed from, keyed by slug the same way
+// (see `scripts/transcribe-posts.sh`). A note is the post as it was written,
+// before `md-to-blog-post` turned it into a component, which makes it the
+// best thing to hand an agent asking for `text/markdown`. Not every post has
+// one: `posts/README.md` allows hand-written components too.
+const sources = import.meta.glob<string>('./posts/sources/*.md', {
+  eager: true,
+  query: '?raw',
+  import: 'default'
+});
+
 const slugFromPath = (path: string): string => path.split('/').pop()!.replace('.svelte', '');
 
 const byNewest = (a: Post, b: Post): number =>
@@ -52,6 +63,29 @@ export const posts: Post[] = Object.entries(modules)
 export const getPost = (slug: string): PostModule | undefined => {
   const entry = Object.entries(modules).find(([path]) => slugFromPath(path) === slug);
   return entry?.[1];
+};
+
+/**
+ * Drops the `+++` TOML frontmatter block `md-to-blog-post` reads, leaving the
+ * body. The metadata is already on the post itself, resolved and typed.
+ */
+const stripFrontmatter = (markdown: string): string => {
+  const lines = markdown.split('\n');
+
+  if (lines[0]?.trim() !== '+++') {
+    return markdown;
+  }
+
+  const close = lines.indexOf('+++', 1);
+
+  return close === -1 ? markdown : lines.slice(close + 1).join('\n');
+};
+
+/** The note a post was transcribed from, body only, or `undefined` if it has none. */
+export const getPostSource = (slug: string): string | undefined => {
+  const source = sources[`./posts/sources/${slug}.md`];
+
+  return source === undefined ? undefined : stripFrontmatter(source).trim();
 };
 
 /** Human-friendly date, e.g. "29 June 2026". */

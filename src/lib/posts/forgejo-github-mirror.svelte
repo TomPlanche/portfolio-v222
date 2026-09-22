@@ -6,7 +6,8 @@
     date: '2026-09-14',
     description:
       'How I made my self-hosted Forgejo the main home for my GitHub forks and personal repos, why a simple two-way mirror kept destroying itself, and every failure along the way, including one closed pull request and one outage I caused myself.',
-    tags: ['self-hosting', 'forgejo', 'git', 'rust', 'automation']
+    tags: ['self-hosting', 'forgejo', 'git', 'rust', 'automation'],
+    draft: true
   };
 </script>
 

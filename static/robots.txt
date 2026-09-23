@@ -1,5 +1,7 @@
 # allow crawling everything by default
 User-agent: *
+# content usage preferences, see https://contentsignals.org/
+Content-Signal: ai-train=no, search=yes, ai-input=yes
 Disallow:
 
 Sitemap: https://tomplanche.com/sitemap.xml

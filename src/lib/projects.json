@@ -34,6 +34,14 @@
     "medium": "/zed.gif"
   },
   {
+    "name": "apache iggy",
+    "role": "contributor",
+    "url": "https://github.com/apache/iggy/pulls?q=is%3Apr%20author%3ATomPlanche",
+    "description": "I contributed to Apache Iggy, a message streaming platform written in Rust. First, I added async disconnect() and shutdown() methods to the Python SDK (PR #4288). During this work, I found lifecycle bugs in the Rust SDK. The heartbeat task cancelled an explicit disconnect(). A WebSocket client could reconnect after shutdown(). I reported these bugs in issue #4287 with small reproduction programs. Then I fixed them in six PRs. In total, the maintainers merged seven of my PRs.",
+    "language": "Rust",
+    "medium": "/apache-iggy-prs.png"
+  },
+  {
     "name": "cobe",
     "role": "contributor",
     "url": "https://github.com/shuding/cobe/pulls?q=is%3Apr%20author%3ATomPlanche",

@@ -123,6 +123,7 @@ const classifyAirliner = (s: number, a: number, out: PlaneHit) => {
 
     if (s > 0.8 && a < 0.02) {
       out.part = PART_FIN;
+      out.chord = (s - 0.8) / 0.2;
     } else if (s > 0.035 && s < 0.075 && across > 0.2 && across < 0.85) {
       out.part = PART_COCKPIT;
     } else {
@@ -193,6 +194,7 @@ const classifyRafale = (s: number, a: number, out: PlaneHit) => {
       out.chord = (1 - s) / 0.05;
     } else if (s > 0.7 && a < 0.012) {
       out.part = PART_FIN;
+      out.chord = (s - 0.7) / 0.3;
     } else if (s > 0.15 && s < 0.28 && across < 0.7) {
       out.part = PART_COCKPIT;
     } else {

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SOCIALS } from '$lib/socials';
+
   type CommitInfo = {
     sha: string;
     date: string;
@@ -7,15 +9,7 @@
 
   let { lastCommit }: { lastCommit: CommitInfo | null } = $props();
 
-  const links: {
-    href: string;
-    title: string;
-  }[] = [
-    { href: 'https://github.com/tomplanche', title: 'github' },
-    { href: 'mailto:tomplanche@proton.me', title: 'mail' },
-    { href: 'https://linkedin.com/in/tom-planche', title: 'linkedin' },
-    { href: 'https://api.tomplanche.com/static/tom-planche-resume-en.pdf', title: 'resume' }
-  ];
+  const links = SOCIALS;
 </script>
 
 <footer>

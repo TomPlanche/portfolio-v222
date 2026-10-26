@@ -1,7 +1,7 @@
 import type { PlaneKind } from './shape';
 import { clamp, rand, TAU } from './util';
 
-export type Livery = 'red' | 'navy' | 'white' | 'grey';
+export type Livery = 'airfrance' | 'grey';
 
 export type Plane = {
   id: number;
@@ -40,7 +40,6 @@ export const WAYPOINT_FADE = 9;
 export const FLYOVER_LIFE = 0.45;
 const DROP_RADIUS = 34;
 const MAX_WAYPOINTS = 24;
-const LIVERIES: Livery[] = ['red', 'navy', 'white'];
 /** The share of new planes that are Rafales instead of airliners. */
 const RAFALE_CHANCE = 0.25;
 /**
@@ -194,7 +193,7 @@ export class Sky {
     return {
       id: this.nextId++,
       kind,
-      livery: rafale ? 'grey' : LIVERIES[Math.floor(Math.random() * LIVERIES.length)],
+      livery: rafale ? 'grey' : 'airfrance',
       length,
       x: cx + dx * along,
       y: cy + dy * along,

@@ -18,6 +18,8 @@
   // Single source of truth for the head: every route feeds this through the
   // `seo` key of its `load`. See `$lib/seo`.
   const seo = $derived(resolveSeo(page.url, page.data.seo));
+  // The home page is a single screen: no footer, its links sit in the note instead.
+  const isHome = $derived(page.route.id === '/');
 
   $effect(() => {
     if (pageReveal.done) {
@@ -80,11 +82,13 @@
 <div class="site" data-intro={pageReveal.done ? undefined : ''}>
   <Header />
 
-  <main>
+  <main class:home={isHome}>
     {@render children()}
   </main>
 
-  <Footer lastCommit={data.lastCommit} />
+  {#if !isHome}
+    <Footer lastCommit={data.lastCommit} />
+  {/if}
 </div>
 
 <style>
@@ -106,6 +110,12 @@
 
   main {
     padding: 2rem 4vmin;
+  }
+
+  main.home {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   #noise {

@@ -21,6 +21,7 @@ const lastDeploy = commits[0]?.commit.committer.date.slice(0, 10);
 
 const entries = (): Entry[] => [
   { path: '/', lastmod: lastDeploy, changefreq: 'monthly', priority: '1.0' },
+  { path: '/projects', lastmod: lastDeploy, changefreq: 'weekly', priority: '0.8' },
   { path: '/blog', lastmod: posts[0]?.date ?? lastDeploy, changefreq: 'weekly', priority: '0.8' },
   ...posts.map((post): Entry => ({
     path: `/blog/${post.slug}`,

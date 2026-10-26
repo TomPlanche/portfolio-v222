@@ -23,7 +23,9 @@ import { clamp, hash3, lineGlyph, mix, packRgb, type Rgb, shade, smoothstep } fr
 const BG: Rgb = [18, 19, 22];
 const WHITE: Rgb = [236, 234, 223];
 const RED: Rgb = [211, 69, 22];
-const NAVY: Rgb = [72, 128, 170];
+// Air France blue and red, lifted a little so they still read on the dark page.
+const AF_BLUE: Rgb = [40, 86, 176];
+const AF_RED: Rgb = [228, 30, 40];
 const METAL: Rgb = [176, 178, 190];
 const ENGINE: Rgb = [128, 128, 142];
 const GLASS: Rgb = [10, 10, 12];
@@ -53,24 +55,43 @@ const TILE_LIT = 0.95;
 const INK = 0.42;
 
 /** `noseEnd` is how far back the nose paint goes, as a fraction of length. */
+/**
+ * `fin` lists colour bands from the front of the fin to its back; without it the fin takes `tail`.
+ * `stripe` runs along both sides of the body, from `stripeFrom` to `stripeTo`.
+ */
 type Paint = {
   body: Rgb;
   wing: Rgb;
   tail: Rgb;
+  fin: Rgb[] | null;
   stripe: Rgb | null;
+  stripeFrom: number;
+  stripeTo: number;
   nose: Rgb | null;
   noseEnd: number;
 };
 
 const PAINTS: Record<Livery, Paint> = {
-  red: { body: WHITE, wing: METAL, tail: RED, stripe: RED, nose: null, noseEnd: 0.07 },
-  navy: { body: WHITE, wing: METAL, tail: NAVY, stripe: NAVY, nose: RED, noseEnd: 0.07 },
-  white: { body: WHITE, wing: METAL, tail: RED, stripe: null, nose: RED, noseEnd: 0.07 },
+  // White body, the blue titles up front, and the blue, white and red stripes of the tail.
+  airfrance: {
+    body: WHITE,
+    wing: METAL,
+    tail: WHITE,
+    fin: [WHITE, AF_BLUE, AF_RED, WHITE, AF_BLUE],
+    stripe: AF_BLUE,
+    stripeFrom: 0.12,
+    stripeTo: 0.34,
+    nose: null,
+    noseEnd: 0
+  },
   grey: {
     body: GREY_LIGHT,
     wing: GREY_DARK,
     tail: GREY_DARK,
+    fin: null,
     stripe: null,
+    stripeFrom: 0,
+    stripeTo: 0,
     nose: RADOME,
     noseEnd: 0.1
   }
@@ -319,7 +340,10 @@ export class PlaneRenderer {
           }
           rgb = mix(BG, WHITE, 0.85);
         } else if (part === PART_FIN) {
-          tile = mix(BG, paint.tail, TILE_LIT);
+          const band = paint.fin
+            ? paint.fin[clamp(Math.floor(chord * paint.fin.length), 0, paint.fin.length - 1)]
+            : paint.tail;
+          tile = mix(BG, band, TILE_LIT);
           glyph = lineGlyph(fx, fy);
           rgb = shade(tile, INK + 0.25);
         } else if (part === PART_ENGINE) {
@@ -351,7 +375,11 @@ export class PlaneRenderer {
           const colour =
             paint.nose && s < paint.noseEnd
               ? paint.nose
-              : paint.stripe && across > 0.5 && across < 0.8 && s > 0.1 && s < 0.78
+              : paint.stripe &&
+                  across > 0.5 &&
+                  across < 0.8 &&
+                  s > paint.stripeFrom &&
+                  s < paint.stripeTo
                 ? paint.stripe
                 : paint.body;
           tile = mix(BG, colour, TILE_SHADOW + (TILE_LIT - TILE_SHADOW) * lum);

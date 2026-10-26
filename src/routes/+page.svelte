@@ -1,14 +1,5 @@
 <script lang="ts">
-  import ActivityList from '$lib/components/ActivityList.svelte';
-  import PostsList from '$lib/components/PostsList.svelte';
-  import ProjectsList from '$lib/components/ProjectsList.svelte';
-  import { posts } from '$lib/posts';
-  import { projects } from '$lib/projects';
-  import type { PageData } from './$types';
-
-  let { data }: { data: PageData } = $props();
-
-  const GITHUB_PROFILE = 'https://github.com/TomPlanche';
+  import { SOCIALS } from '$lib/socials';
 
   // Calculate years since 6 March 2002
   const age = Math.floor(
@@ -16,156 +7,129 @@
   );
 </script>
 
+<!-- A single screen: the sky, and a short note anchored to the bottom left. -->
 <section id="about">
-  <h2>About.</h2>
+  <img alt="Plane made by Nora" src="/avion-bleu-zed-nora.png" title="I like planes" />
 
-  <div class="about-content">
-    <pre>
-      .
-\_____)\_____
-/--v____ __`&lt;
-        )/
-        '</pre>
+  <div class="note">
+    <h1>Hi, I'm Tom.</h1>
 
     <p>
-      I'm a {age} years old French software engineer and CS student at
-      <a href="https://www.cnam.fr/" target="_blank" rel="noopener noreferrer">CNAM</a>, based in
-      Paris.
+      {age} years old French software engineer and CS student at
+      <a href="https://www.cnam.fr/" target="_blank" rel="noopener noreferrer">CNAM</a>, in Paris.
+    </p>
+    <p>
+      Currently @
+      <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
+      before that
+      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>.
+    </p>
+    <p>
       <a
         href="https://github.com/TomPlanche?tab=repositories&q&type&language=rust&sort"
         target="_blank"
         rel="noopener noreferrer">Rust enthusiast</a
-      >, I enjoy building CLI tools and web apps from Git workflow automation to interactive
-      frontends. Currently working at
-      <a href="https://affluences.com" target="_blank" rel="noopener noreferrer">Affluences</a>,
-      previously at
-      <a href="https://www.crealo.app/" target="_blank" rel="noopener noreferrer">Créalo</a>. <br />
+      >,
       <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a>
-      enjoyer, currently exploring the possibilities of decentralized social networks. <br />
-      I also try to self-host things like
+      enjoyer, self-hosting
       <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer"
         >my own Git forge</a
-      >
-      running on my Lenovo Thincenter Neo 50q Gen5, and
-      <a href="https://tomplanche.com/" target="_blank" rel="noopener noreferrer">this website</a>
-      running on a VPS. <br />
+      > on a Lenovo Thincenter Neo 50q Gen5.
+    </p>
+
+    <p class="socials">
+      {#each SOCIALS as { href, title }, i (href)}
+        {#if i > 0}<span class="sep">/</span>{/if}
+        <a {href} target="_blank" rel="noopener noreferrer">{title}</a>
+      {/each}
     </p>
   </div>
 </section>
 
-<section id="projects">
-  <h2>Projects.</h2>
-
-  <ProjectsList {projects} />
-</section>
-
-<section id="activity">
-  <h2>Activity.</h2>
-
-  <ActivityList
-    events={data.activity.events}
-    compactLimit={data.activity.compactLimit}
-    profileUrl={GITHUB_PROFILE}
-  />
-</section>
-
-<section id="writing">
-  <h2>Writing.</h2>
-
-  <PostsList {posts} />
-</section>
-
 <style lang="scss">
-  @use '$lib/styles/sections';
+  @use '$lib/styles/frosted';
 
-  section {
-    @include sections.section-shell;
+  #about {
+    @include frosted.frosted;
 
-    height: 100%;
-    justify-content: center;
+    // Pushed to the bottom of the screen by the layout's home `main`.
+    margin-top: auto;
+    align-self: flex-start;
+    max-width: 46rem;
 
-    &#about {
-      display: flex;
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 
-      // Leaves the sky visible above the content.
-      //margin-top: clamp(12rem, 55vh, 36rem);
+    padding: 1.5rem 2rem;
 
-      .about-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        column-gap: 4rem;
+    font-family: 'Supply Mono', monospace;
+    font-size: 1rem;
 
-        width: 100%;
-      }
+    // The site centres every element (`* { text-align: center }` in the reset).
+    &,
+    :global(*) {
+      text-align: left;
+    }
+  }
 
-      pre {
-        font-size: 2.25rem;
-        font-family: 'monocraft', monospace;
+  img {
+    align-self: flex-start;
+    height: 4rem;
+    width: auto;
+  }
 
-        text-align: left;
-      }
+  .note {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 
-      p {
-        font-family: 'Supply Mono', monospace;
-        font-size: 1.5rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
 
-        line-height: 1.5;
-        text-align: left;
-        text-wrap: pretty;
+  h1 {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+  }
 
-        padding-right: 4rem;
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+    transition: text-decoration-color 0.15s ease;
 
-        a {
-          color: inherit;
-          text-decoration: none;
-          border-bottom: 1px dotted currentColor;
-          opacity: 0.8;
-          transition:
-            opacity 0.15s ease,
-            border-bottom-color 0.15s ease;
+    &:hover,
+    &:focus-visible {
+      text-decoration-color: currentColor;
+    }
+  }
 
-          &:hover {
-            opacity: 1;
-            border-bottom-style: solid;
-            cursor: help;
-          }
-        }
+  .socials {
+    margin-top: 0.75rem;
+
+    a {
+      opacity: 0.6;
+      transition: opacity 0.15s ease;
+
+      &:hover,
+      &:focus-visible {
+        opacity: 1;
       }
     }
 
-    h2 {
-      @include sections.section-heading;
+    .sep {
+      opacity: 0.4;
     }
+  }
 
-    > div {
-      padding: 4rem 2rem 0 2rem;
-    }
-
-    @media (max-width: 767px) {
-      > div {
-        padding: 2rem 0;
-      }
-
-      &#about {
-        pre {
-          align-self: center;
-        }
-
-        p {
-          text-align: center;
-          text-wrap: balance;
-          padding: 0;
-        }
-      }
-    }
-
-    @media (min-width: 768px) {
-      &#about .about-content {
-        flex-direction: row;
-        align-items: center;
-      }
+  @media (max-width: 767px) {
+    #about {
+      padding: 1.25rem;
+      font-size: 0.9rem;
     }
   }
 </style>

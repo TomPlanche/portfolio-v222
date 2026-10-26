@@ -1,3 +1,5 @@
+@use 'frosted';
+
 // Shared chrome for the top-level page sections (about, projects, writing, now...).
 // Single source of truth so every page gets the same heading rule and spacing.
 
@@ -25,11 +27,15 @@
 
 // The column a section's heading and content stack in.
 @mixin section-shell {
+  @include frosted.frosted;
+
   width: 100%;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
-  padding-top: 3rem;
+  padding: 3rem 1.5rem 1.5rem;
+  // A strip of sky between two sections, so each reads as its own pane.
+  margin-bottom: 2rem;
 }

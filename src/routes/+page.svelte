@@ -46,7 +46,7 @@
       <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer"
         >my own Git forge</a
       >
-      running on an old Raspberry Pi 4, and
+      running on my Lenovo Thincenter Neo 50q Gen5, and
       <a href="https://tomplanche.com/" target="_blank" rel="noopener noreferrer">this website</a>
       running on a VPS. <br />
     </p>
@@ -87,6 +87,9 @@
     &#about {
       display: flex;
       flex-direction: column;
+
+      // Leaves the sky visible above the content.
+      //margin-top: clamp(12rem, 55vh, 36rem);
 
       .about-content {
         display: flex;

@@ -1,0 +1,16 @@
+// A frosted pane for anything that sits over the planes sky: the page colour, partly
+// see-through, over a blur of what is behind it. The planes stay visible but the text reads.
+@mixin frosted($radius: 0.75rem) {
+  background: color-mix(in srgb, var(--zed-dark) 60%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: $radius;
+
+  // Fades in once the intro ends. The fade sits on the pane itself and not on a wrapper:
+  // an ancestor with `opacity` below 1 would cut the blur off from the sky behind it.
+  transition: opacity 1s ease;
+
+  :global([data-intro]) & {
+    opacity: 0;
+  }
+}

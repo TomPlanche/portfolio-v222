@@ -41,6 +41,8 @@
 </div>
 
 <style lang="scss">
+  @use '$lib/styles/frosted';
+
   // Near full-width, cancelling the layout's 4vmin side padding, leaving only a slim gutter.
   .layout {
     width: 100%;
@@ -49,7 +51,10 @@
   }
 
   article {
+    @include frosted.frosted;
+
     width: 100%;
+    padding: 1.5rem;
 
     font-size: 35%;
   }
@@ -82,10 +87,13 @@
     // The table of contents scrolls its own list when it outgrows the
     // viewport; the button sits under it.
     .rail {
+      @include frosted.frosted;
+
       display: flex;
       flex-direction: column;
       align-items: start;
       gap: 1.5rem;
+      padding: 1rem;
       position: sticky;
       top: 4rem;
     }

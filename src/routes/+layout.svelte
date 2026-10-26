@@ -3,18 +3,30 @@
 
   import { page } from '$app/state';
 
-  import PixelReveal from '$lib/components/PixelReveal.svelte';
+  import PlanesSky from '$lib/components/PlanesSky.svelte';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import { pageReveal } from '$lib/pageReveal.svelte';
   import { resolveSeo, SITE_NAME } from '$lib/seo';
 
   let { children, data } = $props();
 
   const favicon = '/zoizo.png';
+  // On the first load, the planes fly alone for this long before the content fades in.
+  const INTRO_DELAY = 2500;
 
   // Single source of truth for the head: every route feeds this through the
   // `seo` key of its `load`. See `$lib/seo`.
   const seo = $derived(resolveSeo(page.url, page.data.seo));
+
+  $effect(() => {
+    if (pageReveal.done) {
+      return;
+    }
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timer = setTimeout(() => pageReveal.complete(), reduced ? 0 : INTRO_DELAY);
+    return () => clearTimeout(timer);
+  });
 </script>
 
 <svelte:head>
@@ -46,24 +58,50 @@
 
   <!-- X falls back to the Open Graph tags, but renders nothing without this. -->
   <meta content="summary" name="twitter:card" />
+
+  <!-- Without JS the intro never ends, so show the content straight away. -->
+  <noscript>
+    <style>
+      [data-intro] * {
+        opacity: 1 !important;
+      }
+    </style>
+  </noscript>
 </svelte:head>
 
-<PixelReveal />
 <div id="noise"></div>
 
-<Header />
+<!-- The sky sits behind every page. `/planes` mounts its own to read the stats. -->
+{#if page.route.id !== '/planes'}
+  <PlanesSky opacity={pageReveal.done ? 0.35 : 1} />
+{/if}
 
-<main>
-  {@render children()}
-</main>
+<!-- While `data-intro` is set, the frosted panes stay hidden (see `$lib/styles/frosted`). -->
+<div class="site" data-intro={pageReveal.done ? undefined : ''}>
+  <Header />
 
-<Footer lastCommit={data.lastCommit} />
+  <main>
+    {@render children()}
+  </main>
+
+  <Footer lastCommit={data.lastCommit} />
+</div>
 
 <style>
   :global(body) {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+  }
+
+  .site {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .site[data-intro] {
+    pointer-events: none;
   }
 
   main {

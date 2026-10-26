@@ -29,23 +29,15 @@
         <path d="M2 8 8 2M3.5 2H8v4.5" />
       </svg>
     </a>
-    <span class="sep">/</span>
-    <a
-      href="https://cron.tomplanche.com/"
-      aria-current={undefined}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      crons
-      <svg class="external" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
-        <path d="M2 8 8 2M3.5 2H8v4.5" />
-      </svg>
-    </a>
   </nav>
 </header>
 
 <style lang="scss">
+  @use '$lib/styles/frosted';
+
   header {
+    @include frosted.frosted(0);
+
     display: flex;
     align-items: center;
     justify-content: space-between;

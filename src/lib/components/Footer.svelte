@@ -50,7 +50,11 @@
 </footer>
 
 <style lang="scss">
+  @use '$lib/styles/frosted';
+
   footer {
+    @include frosted.frosted(0);
+
     display: flex;
     flex-direction: column;
     align-items: center;

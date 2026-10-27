@@ -95,7 +95,9 @@
   :global(body) {
     display: flex;
     flex-direction: column;
+    /* The visible height: on mobile Safari the text stops at the toolbar, the sky goes under it. */
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .site {
@@ -116,6 +118,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    /* Keeps the note clear of the home indicator now that the page runs edge to edge. */
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
   }
 
   #noise {
@@ -128,8 +132,8 @@
     background-attachment: fixed;
     position: fixed;
     top: 0;
-    bottom: 0;
     left: 0;
     right: 0;
+    height: 100lvh;
   }
 </style>

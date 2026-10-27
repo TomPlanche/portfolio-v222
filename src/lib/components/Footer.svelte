@@ -53,7 +53,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    padding: 2rem 4vmin;
+    padding: 2rem 4vmin calc(2rem + env(safe-area-inset-bottom));
     margin-top: auto;
     border-top: 1px dotted currentColor;
     font-family: 'Supply Mono', monospace;

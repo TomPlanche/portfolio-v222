@@ -98,22 +98,6 @@
     /* The visible height: on mobile Safari the text stops at the toolbar, the sky goes under it. */
     min-height: 100vh;
     min-height: 100dvh;
-    position: relative;
-  }
-
-  /*
-   * iOS 26 Safari only lets a fixed layer (the sky) show under its toolbar while the page can
-   * still scroll that far. This adds scroll range without adding anything to the layout, so the
-   * home page keeps its content above the toolbar and a long page keeps the sky at its end.
-   */
-  :global(body)::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 1px;
-    height: 120px;
-    pointer-events: none;
   }
 
   .site {

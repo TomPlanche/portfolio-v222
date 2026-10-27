@@ -23,10 +23,7 @@
 <style>
   /*
    * Behind the page, over the body background. `lvh` is the tallest the viewport gets, so on
-   * mobile Safari the sky does not resize as the toolbar shows or hides. The extra 120px lets it
-   * reach under the floating toolbar of iOS 26 Safari, which clips a fixed layer that ends at the
-   * viewport edge. That clip also catches a fixed `<canvas>` itself, which is why the canvas sits
-   * in a fixed `div` instead. See the `body::after` in the root layout.
+   * mobile Safari the sky does not resize as the toolbar shows or hides.
    */
   .sky {
     position: fixed;
@@ -35,8 +32,8 @@
     z-index: -1;
 
     width: 100%;
-    height: calc(100% + 120px);
-    height: calc(100lvh + 120px);
+    height: 100%;
+    height: 100lvh;
 
     pointer-events: none;
 

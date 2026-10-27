@@ -62,6 +62,8 @@
 
     .links {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
       gap: 0.5rem;
 
@@ -71,6 +73,10 @@
         transition: opacity 0.15s ease;
         font-size: 1.25rem;
         opacity: 0.7;
+
+        @media (max-width: 767px) {
+          font-size: 1rem;
+        }
 
         &:hover {
           opacity: 1;

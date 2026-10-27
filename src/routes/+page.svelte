@@ -111,6 +111,11 @@
   .socials {
     margin-top: 0.75rem;
 
+    // Flex drops the markup's whitespace, so each `/` gets the same gap on both sides.
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6em;
+
     a {
       opacity: 0.6;
       transition: opacity 0.15s ease;

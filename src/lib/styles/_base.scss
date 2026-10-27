@@ -63,3 +63,10 @@ body {
     }
   }
 }
+
+// On a phone the scale-down above would leave 1rem near 10px, too small to read: go back to 16px.
+@media screen and (max-width: 767px) {
+  html {
+    font-size: 100%;
+  }
+}

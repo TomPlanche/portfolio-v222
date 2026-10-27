@@ -16,10 +16,8 @@
 
   <ul>
     <li>
-      My (<a href="/">this</a>) website, which I host on a VPS running on SvelteKit and Rust for
-      backend/<a href="https://cron.tomplanche.com/" target="_blank" rel="noopener noreferrer"
-        >cron tasks</a
-      >.
+      My (<a href="/">this</a>) website, which I host on a VPS running on SvelteKit and Rust for the
+      backend.
     </li>
     <li>
       Self-hosting <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer">

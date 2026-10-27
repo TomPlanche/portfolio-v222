@@ -72,6 +72,13 @@
     display: none;
   }
 
+  // `35%` is sized against the desktop body font; on a phone it shrinks the prose to ~9px.
+  @media (max-width: 767px) {
+    article {
+      font-size: 0.8rem;
+    }
+  }
+
   // Wide enough for both. The block stops being centred and hugs the left:
   // the side gutters it was spending are exactly the room the list needs.
   @media (min-width: 768px) {

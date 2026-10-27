@@ -1,8 +1,8 @@
 <script lang="ts">
-  // Imports
-  import { SkyEngine, type SkyStats } from '$lib/planes/engine';
+	// Imports
+	import { SkyEngine, type SkyStats } from '$lib/planes/engine';
 
-  // Variables
+	// Variables
   let { onStats, opacity = 1 }: { onStats?: (stats: SkyStats) => void; opacity?: number } =
     $props();
 
@@ -11,7 +11,8 @@
   $effect(() => {
     // Read through the prop at call time, so a new callback doesn't tear down the engine.
     const engine = new SkyEngine(canvas, (stats) => onStats?.(stats));
-    return () => engine.destroy();
+
+		return () => engine.destroy();
   });
 </script>
 

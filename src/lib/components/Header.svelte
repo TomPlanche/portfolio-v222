@@ -44,6 +44,14 @@
       letter-spacing: 0.08em;
       text-transform: lowercase;
 
+      // Tighter on a phone, so the five links stay on one line.
+      @media (max-width: 767px) {
+        gap: 0.5rem 1rem;
+        padding: 0.6rem 1.1rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+      }
+
       a {
         color: inherit;
         text-decoration: none;

@@ -38,4 +38,9 @@
   padding: 3rem 1.5rem 1.5rem;
   // A strip of sky between two sections, so each reads as its own pane.
   margin-bottom: 2rem;
+
+  // On a phone the pane keeps only a slim gutter, so the content gets the width.
+  @media (max-width: 767px) {
+    padding: 2rem 1rem 1rem;
+  }
 }

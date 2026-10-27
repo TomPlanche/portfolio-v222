@@ -24,6 +24,9 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "build:main": "bash scripts/build-branches.sh main",
+    "build:next": "bash scripts/build-branches.sh next",
+    "build:all": "bash scripts/build-branches.sh all",
     "preview": "vite preview",
     "serve": "vite build && HOST=0.0.0.0 PORT=3000 node --env-file-if-exists=.env build/index.js",
     "prepare": "svelte-kit sync || echo ''",

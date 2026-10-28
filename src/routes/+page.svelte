@@ -31,10 +31,10 @@
         rel="noopener noreferrer">Rust enthusiast</a
       >,
       <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a>
-      enjoyer, self-hosting
+      enjoyer, self-hosting things, including
       <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer"
         >my own Git forge</a
-      > on a Lenovo Thincenter Neo 50q Gen5.
+      > on a Lenovo Thincenter.
     </p>
 
     <p class="socials">

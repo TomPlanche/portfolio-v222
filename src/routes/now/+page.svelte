@@ -22,7 +22,7 @@
     <li>
       Self-hosting <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer">
         my own Git forge
-      </a> on an old Raspberry Pi 4.
+      </a> on a Lenovo ThinkCentre.
     </li>
     <li>
       Learning, playing with <a

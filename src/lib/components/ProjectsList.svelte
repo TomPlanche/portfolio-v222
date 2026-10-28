@@ -10,6 +10,11 @@
 
   let { projects }: { projects: Project[] } = $props();
 
+  const MORE_LINKS: { href: string; title: string }[] = [
+    { href: 'https://github.com/TomPlanche?tab=repositories', title: 'github' },
+    { href: 'https://git.tomplanche.com/', title: 'forge' }
+  ];
+
   // The globe project points at wherever the visitor is, so the permission
   // prompt belongs here rather than on the page that composes the sections.
   onMount(() => {
@@ -66,6 +71,24 @@
       </a>
     </li>
   {/each}
+
+  <li class="project-item more">
+    <div class="more-card">
+      <span class="more-plus" aria-hidden="true">+</span>
+      <span class="project-name">more projects</span>
+      <p class="project-description">See everything else I build on GitHub or on my own forge.</p>
+      <div class="more-links">
+        {#each MORE_LINKS as { href, title } (href)}
+          <a {href} target="_blank" rel="noopener noreferrer">
+            {title}
+            <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+              <path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.2" />
+            </svg>
+          </a>
+        {/each}
+      </div>
+    </div>
+  </li>
 </ul>
 
 <style lang="scss">
@@ -78,7 +101,8 @@
     padding: 4rem 2rem 0;
   }
 
-  .project-item a {
+  .project-item > a,
+  .more-card {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -98,8 +122,47 @@
     }
   }
 
-  .projects-list:has(a:hover) .project-item a:not(:hover) {
+  .projects-list:has(a:hover) .project-item > a:not(:hover),
+  .projects-list:has(.project-item > a:hover) .more-card {
     opacity: 0.5;
+  }
+
+  .more-card {
+    border-style: dashed;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .project-description {
+      text-align: center;
+    }
+  }
+
+  .more-plus {
+    font-family: 'monocraft', monospace;
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .more-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'monocraft', monospace;
+      font-size: 0.9rem;
+      color: inherit;
+      text-decoration: underline dotted;
+      text-underline-offset: 0.25em;
+
+      &:hover {
+        text-decoration-style: solid;
+      }
+    }
   }
 
   .project-header {

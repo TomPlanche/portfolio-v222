@@ -7,7 +7,7 @@ export const PART_ENGINE = 4;
 export const PART_COCKPIT = 5;
 export const PART_FIN = 6;
 
-export type PlaneKind = 'airliner' | 'rafale';
+export type PlaneKind = 'airliner' | 'rafale' | 'helicopter';
 
 /** Where a point landed on the plane; `chord` runs 0 at a leading edge to 1 at the trailing edge. */
 export type PlaneHit = {
@@ -233,7 +233,71 @@ const RAFALE: PlaneShape = {
   exhaustA: 0.03
 };
 
+/**
+ * An Airbus Helicopters EC135, the SAMU's air ambulance: 10.2 m of fuselage under a 10.2 m rotor.
+ * Where the main rotor turns, back from the nose, and its radius, as fractions of length.
+ */
+export const ROTOR_S = 0.36;
+export const ROTOR_RADIUS = 0.5;
+
+/** A cabin 1.56 m wide with a blunt rounded nose, a thin tail boom, then the Fenestron at the end. */
+const helicopterHalfWidth = (s: number) => {
+  const cabin = s < 0.55 ? 0.077 * Math.sqrt(Math.max(0, 1 - ((s - 0.22) / 0.33) ** 2)) : 0;
+  const boom = s > 0.4 ? (s > 0.88 ? 0.03 : 0.024 - 0.01 * smoothstep(0.5, 0.88, s)) : 0;
+
+  return Math.max(cabin, boom);
+};
+
+/**
+ * Same body coordinates as `classifyAirliner`. The large glazed nose, the engine deck under the
+ * rotor mast, a horizontal stabilizer with end plates on the boom and the shrouded tail rotor.
+ * The main rotor turns with time, so the renderer draws it on top.
+ */
+const classifyHelicopter = (s: number, a: number, out: PlaneHit) => {
+  resetHit(out);
+  if (s < 0 || s > 1) {
+    return false;
+  }
+
+  const w = helicopterHalfWidth(s);
+  if (a <= w) {
+    const across = a / w;
+    out.across = across;
+
+    if (s > 0.88) {
+      out.part = PART_FIN;
+      out.chord = (s - 0.88) / 0.12;
+    } else if (s > 0.02 && s < 0.17 && across < 0.85) {
+      out.part = PART_COCKPIT;
+    } else if (s > 0.3 && s < 0.5 && across < 0.6) {
+      out.part = PART_ENGINE;
+      out.chord = (s - 0.3) / 0.2;
+    } else {
+      out.part = PART_FUSELAGE;
+    }
+
+    return true;
+  }
+
+  if (inSurface(s, a, 0.74, 0.06, 0.05, 0.13, HELICOPTER.stabilizerSweep, out)) {
+    out.part = PART_STABILIZER;
+
+    return true;
+  }
+
+  return false;
+};
+
+const HELICOPTER: PlaneShape = {
+  classify: classifyHelicopter,
+  wingSweep: 0,
+  stabilizerSweep: 0.1,
+  exhaustS: 0.5,
+  exhaustA: 0.03
+};
+
 export const SHAPES: Record<PlaneKind, PlaneShape> = {
   airliner: AIRLINER,
-  rafale: RAFALE
+  rafale: RAFALE,
+  helicopter: HELICOPTER
 };

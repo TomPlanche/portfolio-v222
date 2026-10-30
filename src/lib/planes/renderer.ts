@@ -6,6 +6,8 @@ import {
   PART_WING,
   type PlaneHit,
   type PlaneShape,
+  ROTOR_RADIUS,
+  ROTOR_S,
   SHAPES
 } from './shape';
 import {
@@ -26,6 +28,9 @@ const RED: Rgb = [211, 69, 22];
 // Air France blue and red, lifted a little so they still read on the dark page.
 const AF_BLUE: Rgb = [40, 86, 176];
 const AF_RED: Rgb = [228, 30, 40];
+// SAMU red and yellow, lifted like the Air France colours.
+const SAMU_RED: Rgb = [214, 38, 38];
+const SAMU_YELLOW: Rgb = [246, 196, 36];
 const METAL: Rgb = [176, 178, 190];
 const ENGINE: Rgb = [128, 128, 142];
 const GLASS: Rgb = [10, 10, 12];
@@ -43,6 +48,11 @@ const FLAME_LENGTH = 0.4;
 const FLAME_WIDTH = 0.05;
 /** How many times a second the flame flickers. */
 const FLAME_FLICKER = 18;
+/** Light blades, so they read over the red body and over the dark page alike. */
+const BLADE: Rgb = [206, 206, 214];
+/** How fast the main rotor turns, in radians a second; slow enough to follow on a grid of cells. */
+const ROTOR_SPEED = 7;
+const QUARTER = Math.PI / 2;
 const SHADOW: Rgb = [0, 0, 0];
 const SHADOW_ALPHA = 0.5;
 const ALPHA = 0.85;
@@ -69,6 +79,9 @@ type Paint = {
   stripeTo: number;
   nose: Rgb | null;
   noseEnd: number;
+  /** Paint for the body from `rearFrom` back, such as a tail boom in another colour. */
+  rear: Rgb | null;
+  rearFrom: number;
 };
 
 const PAINTS: Record<Livery, Paint> = {
@@ -82,7 +95,9 @@ const PAINTS: Record<Livery, Paint> = {
     stripeFrom: 0.12,
     stripeTo: 0.34,
     nose: null,
-    noseEnd: 0
+    noseEnd: 0,
+    rear: null,
+    rearFrom: 0
   },
   grey: {
     body: GREY_LIGHT,
@@ -93,7 +108,24 @@ const PAINTS: Record<Livery, Paint> = {
     stripeFrom: 0,
     stripeTo: 0,
     nose: RADOME,
-    noseEnd: 0.1
+    noseEnd: 0.1,
+    rear: null,
+    rearFrom: 0
+  },
+  // The SAMU's EC135: a red cabin with a yellow band down its sides, and a yellow tail boom,
+  // stabilizer and Fenestron.
+  samu: {
+    body: SAMU_RED,
+    wing: SAMU_YELLOW,
+    tail: SAMU_YELLOW,
+    fin: null,
+    stripe: SAMU_YELLOW,
+    stripeFrom: 0.18,
+    stripeTo: 0.5,
+    nose: null,
+    noseEnd: 0,
+    rear: SAMU_YELLOW,
+    rearFrom: 0.55
   }
 };
 
@@ -188,6 +220,10 @@ export class PlaneRenderer {
     // Lower planes first, so the ones flying higher pass over them.
     for (const p of [...sky.planes].sort((a, b) => a.altitude - b.altitude)) {
       this.rasterizePlane(p);
+
+      if (p.kind === 'helicopter') {
+        this.rasterizeRotor(p, sky.time);
+      }
     }
     this.depositTrails(sky);
     this.diffuse(dt);
@@ -375,13 +411,15 @@ export class PlaneRenderer {
           const colour =
             paint.nose && s < paint.noseEnd
               ? paint.nose
-              : paint.stripe &&
-                  across > 0.5 &&
-                  across < 0.8 &&
-                  s > paint.stripeFrom &&
-                  s < paint.stripeTo
-                ? paint.stripe
-                : paint.body;
+              : paint.rear && s > paint.rearFrom
+                ? paint.rear
+                : paint.stripe &&
+                    across > 0.5 &&
+                    across < 0.8 &&
+                    s > paint.stripeFrom &&
+                    s < paint.stripeTo
+                  ? paint.stripe
+                  : paint.body;
           tile = mix(BG, colour, TILE_SHADOW + (TILE_LIT - TILE_SHADOW) * lum);
 
           if (solid) {
@@ -409,6 +447,67 @@ export class PlaneRenderer {
         cellTileAlpha[i] = tileAlpha;
         cellGlyph[i] = glyph.charCodeAt(0);
         cellColor[i] = packRgb(rgb);
+        cellAlpha[i] = alpha;
+      }
+    }
+  }
+
+  /**
+   * A helicopter's main rotor: four blades turning over the body, a faint blur behind each blade,
+   * and the rim of the rotor disc. It runs after `rasterizePlane`, so the blades sit on top.
+   */
+  private rasterizeRotor(p: Plane, time: number) {
+    const { cw, ch, cols, rows, cellGlyph, cellColor, cellAlpha } = this;
+    const L = apparentLength(p);
+    const radius = ROTOR_RADIUS * L;
+    const hubX = p.x - Math.cos(p.heading) * ROTOR_S * L;
+    const hubY = p.y - Math.sin(p.heading) * ROTOR_S * L;
+    // Each helicopter starts at its own angle, so two rotors never turn in step.
+    const spin = time * ROTOR_SPEED + p.id;
+    const dim = ALPHA * (ALTITUDE_FLOOR + (1 - ALTITUDE_FLOOR) * p.altitude);
+    const c0 = Math.max(0, Math.floor((hubX - radius) / cw));
+    const c1 = Math.min(cols - 1, Math.floor((hubX + radius) / cw));
+    const r0 = Math.max(0, Math.floor((hubY - radius) / ch));
+    const r1 = Math.min(rows - 1, Math.floor((hubY + radius) / ch));
+
+    for (let r = r0; r <= r1; r++) {
+      for (let c = c0; c <= c1; c++) {
+        const dx = c * cw + cw / 2 - hubX;
+        const dy = r * ch + ch / 2 - hubY;
+        const d = Math.hypot(dx, dy);
+
+        if (d > radius) {
+          continue;
+        }
+
+        const i = r * cols + c;
+        let glyph: string;
+        let alpha = dim;
+
+        // `ahead` is how far the next blade still has to turn to reach the cell, so a value close
+        // to QUARTER means a blade has just passed; `lateral` is the distance to the nearest blade.
+        const ahead = (((Math.atan2(dy, dx) - spin) % QUARTER) + QUARTER) % QUARTER;
+        const lateral = d * Math.sin(Math.min(ahead, QUARTER - ahead));
+
+        if (d < cw * 0.6) {
+          glyph = 'o';
+        } else if (lateral < cw * 0.55) {
+          glyph = lineGlyph(dx, dy);
+        } else if (cellGlyph[i]) {
+          // Only the blades and the hub cover the body; the blur and the rim stay off it.
+          continue;
+        } else if (d * Math.sin(QUARTER - ahead) < cw * 1.8) {
+          glyph = lineGlyph(dx, dy);
+          alpha *= 0.3;
+        } else if (d > radius - cw) {
+          glyph = '.';
+          alpha *= 0.35;
+        } else {
+          continue;
+        }
+
+        cellGlyph[i] = glyph.charCodeAt(0);
+        cellColor[i] = packRgb(BLADE);
         cellAlpha[i] = alpha;
       }
     }

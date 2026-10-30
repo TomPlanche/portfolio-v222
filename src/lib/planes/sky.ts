@@ -1,7 +1,7 @@
 import type { PlaneKind } from './shape';
 import { clamp, rand, TAU } from './util';
 
-export type Livery = 'airfrance' | 'grey';
+export type Livery = 'airfrance' | 'grey' | 'samu';
 
 export type Plane = {
   id: number;
@@ -42,12 +42,24 @@ const DROP_RADIUS = 34;
 const MAX_WAYPOINTS = 24;
 /** The share of new planes that are Rafales instead of airliners. */
 const RAFALE_CHANCE = 0.25;
+/** The share of new planes that are helicopters. */
+const HELICOPTER_CHANCE = 0.15;
 /**
  * The sky opens on one airliner and one Rafale alone. The rest of the traffic enters from the
  * edges one at a time, from ARRIVAL_START seconds on (when the site content fades in).
  */
 const ARRIVAL_START = 2.5;
 const ARRIVAL_GAP = 1.5;
+
+const randomKind = (): PlaneKind => {
+  const r = Math.random();
+
+  return r < RAFALE_CHANCE
+    ? 'rafale'
+    : r < RAFALE_CHANCE + HELICOPTER_CHANCE
+      ? 'helicopter'
+      : 'airliner';
+};
 
 /** Distance from (x, y) along (dx, dy) to the edge of the W x H view, for a point inside it. */
 const toEdge = (x: number, y: number, dx: number, dy: number, W: number, H: number) => {
@@ -170,15 +182,15 @@ export class Sky {
    * that course: 0 just outside the edge it enters from, 1 at the far edge.
    * `kind` is random when left out.
    */
-  private launch(
-    progress: number,
-    kind: PlaneKind = Math.random() < RAFALE_CHANCE ? 'rafale' : 'airliner'
-  ): Plane {
+  private launch(progress: number, kind: PlaneKind = randomKind()): Plane {
     const { width: W, height: H } = this;
     const rafale = kind === 'rafale';
+    const helicopter = kind === 'helicopter';
 
     // A Rafale is much smaller than an airliner, and crosses the view about twice as fast.
-    const length = this.baseLength * (rafale ? rand(0.35, 0.45) : rand(0.6, 1));
+    // An EC135 is two thirds of a Rafale's length, and cruises at about 250 km/h.
+    const length =
+      this.baseLength * (rafale ? rand(0.35, 0.45) : helicopter ? rand(0.27, 0.31) : rand(0.6, 1));
     const heading = rand(0, TAU);
     const dx = Math.cos(heading);
     const dy = Math.sin(heading);
@@ -193,13 +205,14 @@ export class Sky {
     return {
       id: this.nextId++,
       kind,
-      livery: rafale ? 'grey' : 'airfrance',
+      livery: rafale ? 'grey' : helicopter ? 'samu' : 'airfrance',
       length,
       x: cx + dx * along,
       y: cy + dy * along,
       heading,
-      speed: length * (rafale ? rand(1, 1.3) : rand(0.2, 0.32)),
-      altitude: rand(0.5, 1)
+      speed: length * (rafale ? rand(1, 1.3) : helicopter ? rand(0.3, 0.4) : rand(0.2, 0.32)),
+      // Helicopters fly low, under the altitude where contrails form.
+      altitude: helicopter ? rand(0.5, 0.65) : rand(0.5, 1)
     };
   }
 }

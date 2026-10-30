@@ -18,6 +18,7 @@ import {
   prefersMarkdown,
   toMarkdown
 } from '$lib/server/markdown';
+import { getMaintenance } from '$lib/server/maintenance';
 
 /** Headers that describe the HTML body and stop being true once it is Markdown. */
 const REPLACED_HEADERS = ['content-encoding', 'content-length', 'etag', 'last-modified'];
@@ -36,11 +37,26 @@ const varyOnAccept = (headers: Headers): void => {
   }
 };
 
+/**
+ * In maintenance mode the layout renders its own page (see `$lib/server/maintenance`).
+ * A 503 tells crawlers that this page is temporary and not the real content.
+ */
+const asUnavailable = (response: Response): Response =>
+  new Response(response.body, {
+    status: 503,
+    statusText: 'Service Unavailable',
+    headers: response.headers
+  });
+
 export const handle: Handle = async ({ event, resolve }) => {
-  const response = await resolve(event);
+  let response = await resolve(event);
 
   if (!isHtml(response)) {
     return response;
+  }
+
+  if (getMaintenance() && response.ok) {
+    response = asUnavailable(response);
   }
 
   varyOnAccept(response.headers);

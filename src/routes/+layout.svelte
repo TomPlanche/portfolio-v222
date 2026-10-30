@@ -73,25 +73,39 @@
 
 <div id="noise"></div>
 
-<!-- The sky sits behind every page. `/planes` mounts its own to read the stats. -->
-{#if page.route.id !== '/planes'}
-  <PlanesSky opacity={pageReveal.done ? 0.35 : 1} />
+{#if data.maintenance}
+  <!-- Maintenance mode (see `$lib/server/maintenance`): the sky and one sentence, nothing else. -->
+  <PlanesSky />
+
+  <main class="maintenance">
+    <p>
+      This website is in maintenance{#if data.maintenance.reason}: {data.maintenance
+          .reason}{:else}.{/if}
+    </p>
+  </main>
+{:else}
+  <!-- The sky sits behind every page. `/planes` mounts its own to read the stats. -->
+  {#if page.route.id !== '/planes'}
+    <PlanesSky opacity={pageReveal.done ? 0.35 : 1} />
+  {/if}
+
+  <!-- While `data-intro` is set, the frosted panes stay hidden (see `$lib/styles/frosted`). -->
+  <div class="site" data-intro={pageReveal.done ? undefined : ''}>
+    <Header />
+
+    <main class:home={isHome}>
+      {@render children()}
+    </main>
+
+    {#if !isHome}
+      <Footer lastCommit={data.lastCommit} />
+    {/if}
+  </div>
 {/if}
 
-<!-- While `data-intro` is set, the frosted panes stay hidden (see `$lib/styles/frosted`). -->
-<div class="site" data-intro={pageReveal.done ? undefined : ''}>
-  <Header />
+<style lang="scss">
+  @use '$lib/styles/frosted';
 
-  <main class:home={isHome}>
-    {@render children()}
-  </main>
-
-  {#if !isHome}
-    <Footer lastCommit={data.lastCommit} />
-  {/if}
-</div>
-
-<style>
   :global(body) {
     display: flex;
     flex-direction: column;
@@ -120,6 +134,27 @@
     flex-direction: column;
     /* Keeps the note clear of the home indicator now that the page runs edge to edge. */
     padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+
+  main.maintenance {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem calc(1rem + env(safe-area-inset-right)) 2rem
+      calc(1rem + env(safe-area-inset-left));
+
+    p {
+      @include frosted.frosted;
+
+      max-width: 46rem;
+      padding: 1.5rem 2rem;
+
+      font-family: 'Supply Mono', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
   }
 
   #noise {

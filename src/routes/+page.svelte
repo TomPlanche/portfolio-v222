@@ -1,6 +1,9 @@
 <script lang="ts">
   import { SOCIALS } from '$lib/socials';
 
+  // `lastCommit` comes from the layout's `load`: the home page has no footer to show it.
+  let { data } = $props();
+
   // Calculate years since 6 March 2002
   const age = Math.floor(
     (Date.now() - new Date(2002, 2, 6).getTime()) / (1000 * 60 * 60 * 24 * 365.25)
@@ -31,10 +34,10 @@
         rel="noopener noreferrer">Rust enthusiast</a
       >,
       <a href="https://atproto.com/" target="_blank" rel="noopener noreferrer">AT Protocol</a>
-      enjoyer, self-hosting things, including
+      enjoyer, self-hosting things, including this website,
       <a href="https://git.tomplanche.com/" target="_blank" rel="noopener noreferrer"
         >my own Git forge</a
-      > on a Lenovo Thincenter.
+      > and more on my Lenovo Thincenter 50q.
     </p>
 
     <p class="socials">
@@ -43,6 +46,23 @@
         <a {href} target="_blank" rel="noopener noreferrer">{title}</a>
       {/each}
     </p>
+
+    {#if data.lastCommit}
+      <a
+        class="commit"
+        href={data.lastCommit.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Last commit of this website"
+      >
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="0" y1="8" x2="4" y2="8" stroke="currentColor" stroke-width="1.5" />
+          <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+          <line x1="12" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+        <span class="sha">{data.lastCommit.sha}</span>
+      </a>
+    {/if}
   </div>
 </section>
 
@@ -55,7 +75,7 @@
     // Pushed to the bottom of the screen by the layout's home `main`.
     margin-top: auto;
     align-self: flex-start;
-    max-width: 46rem;
+    max-width: min(50rem, 50vw);
 
     display: flex;
     flex-direction: column;
@@ -128,6 +148,34 @@
 
     .sep {
       opacity: 0.4;
+    }
+  }
+
+  .commit {
+    align-self: flex-start;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    font-size: 0.75rem;
+    text-decoration: none;
+    opacity: 0.4;
+    transition: opacity 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+    }
+
+    svg {
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+    }
+
+    .sha {
+      font-family: 'monocraft', monospace;
     }
   }
 

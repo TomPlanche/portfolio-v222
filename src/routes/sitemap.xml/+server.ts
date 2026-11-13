@@ -23,6 +23,7 @@ const entries = (): Entry[] => [
   { path: '/', lastmod: lastDeploy, changefreq: 'monthly', priority: '1.0' },
   { path: '/projects', lastmod: lastDeploy, changefreq: 'weekly', priority: '0.8' },
   { path: '/blog', lastmod: posts[0]?.date ?? lastDeploy, changefreq: 'weekly', priority: '0.8' },
+  { path: '/activity', changefreq: 'daily', priority: '0.5' },
   ...posts.map((post): Entry => ({
     path: `/blog/${post.slug}`,
     lastmod: post.date,

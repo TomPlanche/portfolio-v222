@@ -11,6 +11,7 @@
     <a href="/projects" aria-current={isActive('/projects') ? 'page' : undefined}>projects</a>
     <a href="/blog" aria-current={isActive('/blog') ? 'page' : undefined}>blog</a>
     <a href="/now" aria-current={isActive('/now') ? 'page' : undefined}>now</a>
+    <a href="/activity" aria-current={isActive('/activity') ? 'page' : undefined}>activity</a>
     <a href="/sifa-page" aria-current={undefined} rel="noopener noreferrer" target="_blank"
       >sifa
       <svg class="external" viewBox="0 0 10 10" aria-hidden="true" focusable="false">
@@ -44,12 +45,12 @@
       letter-spacing: 0.08em;
       text-transform: lowercase;
 
-      // Tighter on a phone, so the five links stay on one line.
+      // Tighter on a phone, so the six links stay on one line.
       @media (max-width: 767px) {
-        gap: 0.5rem 1rem;
-        padding: 0.6rem 1.1rem;
-        font-size: 0.8rem;
-        letter-spacing: 0.04em;
+        gap: 0.5rem 0.75rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
       }
 
       a {

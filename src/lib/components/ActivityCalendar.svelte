@@ -36,8 +36,10 @@
     ArrowRight: 7
   };
 
-  let filter = $state<string | null>(null);
-  /** Sources hidden with a right click. Replaced on each change, so the derived values rerun. */
+  // Both sets are replaced on each change, so the derived values rerun.
+  /** Sources picked with a left click. Empty means every source. */
+  let shown = $state<ReadonlySet<string>>(new Set());
+  /** Sources hidden with a right click. */
   let excluded = $state<ReadonlySet<string>>(new Set());
   let showAllSources = $state(false);
   let picked = $state<string | null>(null);
@@ -52,12 +54,12 @@
     showAllSources
       ? sources
       : sources.filter(
-          (source, index) => index < CHIP_LIMIT || source.key === filter || excluded.has(source.key)
+          (source, index) => index < CHIP_LIMIT || shown.has(source.key) || excluded.has(source.key)
         )
   );
   const hiddenCount = $derived(sources.length - visibleSources.length);
 
-  const cells = $derived(buildCells(calendar, today, filter, excluded));
+  const cells = $derived(buildCells(calendar, today, shown, excluded));
   const weeks = $derived((cells.at(-1)?.week ?? 0) + 1);
   const months = $derived(monthLabels(cells));
   const stats = $derived(statsOf(cells));
@@ -84,28 +86,38 @@
   );
 
   const year = $derived(calendar.from.slice(0, 4));
-  const filterLabel = $derived(filter ? (calendar.sources[filter]?.label ?? filter) : null);
+  const shownLabels = $derived(
+    [...shown].map((key) => calendar.sources[key]?.label ?? key).join(', ')
+  );
+  /** The one source the grid shows, when there is exactly one. */
+  const onlySource = $derived(shown.size === 1 ? [...shown][0] : null);
 
-  /** A click shows one source alone. On a hidden source, it also brings the source back. */
-  const toggleFilter = (key: string): void => {
+  const without = (set: ReadonlySet<string>, key: string): ReadonlySet<string> =>
+    new Set([...set].filter((entry) => entry !== key));
+
+  const toggle = (set: ReadonlySet<string>, key: string): ReadonlySet<string> =>
+    set.has(key) ? without(set, key) : new Set([...set, key]);
+
+  /**
+   * A click adds a source to the ones shown, or takes it out. On a hidden
+   * source, it also brings the source back.
+   */
+  const toggleShown = (key: string): void => {
     if (excluded.has(key)) {
-      excluded = new Set([...excluded].filter((entry) => entry !== key));
+      excluded = without(excluded, key);
+      shown = new Set([...shown, key]);
+      return;
     }
 
-    filter = filter === key ? null : key;
+    shown = toggle(shown, key);
   };
 
   /** A right click (a two-finger click on a trackpad) hides a source, or brings it back. */
   const toggleExcluded = (event: MouseEvent, key: string): void => {
     event.preventDefault();
 
-    excluded = excluded.has(key)
-      ? new Set([...excluded].filter((entry) => entry !== key))
-      : new Set([...excluded, key]);
-
-    if (filter === key) {
-      filter = null;
-    }
+    excluded = toggle(excluded, key);
+    shown = without(shown, key);
   };
 
   const describe = (cell: DayCell): string =>
@@ -191,7 +203,7 @@
   <div
     class="sources"
     role="group"
-    aria-label="Click a source to show it alone, right click it to hide it"
+    aria-label="Click sources to show only them, right click a source to hide it"
   >
     <span class="sources__label">active on:</span>
 
@@ -201,13 +213,13 @@
         class="chip"
         class:chip--excluded={excluded.has(source.key)}
         style:--color={source.color}
-        aria-pressed={filter === source.key}
+        aria-pressed={shown.has(source.key)}
         aria-label={excluded.has(source.key) ? `${source.label} (hidden)` : undefined}
         title="{plural(source.activeDays, 'day')}, {plural(
           source.events,
           'event'
         )}. Right click to {excluded.has(source.key) ? 'show' : 'hide'} it."
-        onclick={() => toggleFilter(source.key)}
+        onclick={() => toggleShown(source.key)}
         oncontextmenu={(event) => toggleExcluded(event, source.key)}
       >
         {source.label}
@@ -238,8 +250,8 @@
         class="heatmap__grid"
         style:--weeks={weeks}
         role="group"
-        aria-label="Activity in {year}{filterLabel
-          ? ` on ${filterLabel}`
+        aria-label="Activity in {year}{shownLabels
+          ? ` on ${shownLabels}`
           : ''}, one square per day. Use the arrow keys to move between days."
         bind:this={grid}
       >
@@ -284,7 +296,7 @@
           >{hovered.cell.count === 0 ? 'No activity' : plural(hovered.cell.count, 'event')}</strong
         >
         on {formatShortDate(hovered.cell.date)}
-        {#if hovered.cell.lead && filter === null}
+        {#if hovered.cell.lead && onlySource === null}
           <span class="tooltip__lead" style:--color={sourceColor(hovered.cell.lead)}>
             mostly {calendar.sources[hovered.cell.lead]?.label ?? hovered.cell.lead}
           </span>
@@ -296,7 +308,7 @@
   <div
     class="legend"
     aria-hidden="true"
-    style:--color={filter ? sourceColor(filter) : 'currentColor'}
+    style:--color={onlySource ? sourceColor(onlySource) : 'currentColor'}
   >
     <span>less</span>
     {#each [0, 1, 2, 3, 4] as level (level)}
@@ -315,7 +327,7 @@
         {#each selectedEntries as entry (entry.key)}
           <li
             style:--color={entry.color}
-            class:day__entry--dimmed={(filter !== null && filter !== entry.key) ||
+            class:day__entry--dimmed={(shown.size > 0 && !shown.has(entry.key)) ||
               excluded.has(entry.key)}
           >
             <span class="day__source">{entry.label}</span>

@@ -133,7 +133,7 @@ export type DayCell = {
 const leadOf = (
   day: CalendarDay,
   sources: Calendar['sources'],
-  excluded: ReadonlySet<string>
+  counts: (key: string) => boolean
 ): { key: string; value: number } | null => {
   let best: { key: string; value: number; background: boolean } | null = null;
 
@@ -141,7 +141,7 @@ const leadOf = (
     const value = intensity(count, sources[key]?.max ?? count);
     const background = BACKGROUND_SOURCES.has(key);
 
-    if (value <= 0 || excluded.has(key)) {
+    if (value <= 0 || !counts(key)) {
       continue;
     }
 
@@ -161,16 +161,18 @@ const leadOf = (
 /**
  * Every day from `from` to `to`, placed in a Monday-first week grid.
  *
- * With a `filter`, a cell counts only that source. Without one, it counts
- * every source that is not `excluded`, and takes the colour and the shade of
- * its lead source.
+ * A cell counts the sources in `shown` (all of them when `shown` is empty),
+ * minus the `excluded` ones, and takes the colour and the shade of its lead
+ * source among them.
  */
 export const buildCells = (
   calendar: Calendar,
   today: string,
-  filter: string | null,
+  shown: ReadonlySet<string> = new Set(),
   excluded: ReadonlySet<string> = new Set()
 ): DayCell[] => {
+  const counts = (key: string): boolean =>
+    (shown.size === 0 || shown.has(key)) && !excluded.has(key);
   const byDate = new Map(calendar.days.map((day) => [day.date, day]));
   const start = parseDate(calendar.from) - weekdayOf(calendar.from) * DAY_MS;
   const end = parseDate(calendar.to);
@@ -190,21 +192,12 @@ export const buildCells = (
       future: date > today
     };
 
-    if (day && filter !== null) {
-      const count = day.by_source[filter] ?? 0;
+    if (day) {
+      const lead = leadOf(day, calendar.sources, counts);
 
-      cell.count = count;
-      cell.level = levelOf(intensity(count, calendar.sources[filter]?.max ?? count));
-      cell.lead = count > 0 ? filter : null;
-    } else if (day) {
-      const lead = leadOf(day, calendar.sources, excluded);
-
-      cell.count =
-        excluded.size === 0
-          ? day.total
-          : Object.entries(day.by_source)
-              .filter(([key]) => !excluded.has(key))
-              .reduce((sum, [, count]) => sum + count, 0);
+      cell.count = Object.entries(day.by_source)
+        .filter(([key]) => counts(key))
+        .reduce((sum, [, count]) => sum + count, 0);
       cell.level = levelOf(lead?.value ?? 0);
       cell.lead = lead?.key ?? null;
     }

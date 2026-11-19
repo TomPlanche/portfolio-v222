@@ -1,25 +1,25 @@
 <script lang="ts">
-	import ActivityCalendar from '$lib/components/ActivityCalendar.svelte';
-	import type { PageData } from './$types';
+  import ActivityCalendar from '$lib/components/ActivityCalendar.svelte';
+  import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+  let { data }: { data: PageData } = $props();
 </script>
 
 <section id="activity" class="section">
-	<h2>Activity.</h2>
+  <h2>Activity.</h2>
 
-	<p class="section__intro">
-		Everything I do in public, one square per day: code, posts, ATProto apps and the music I listen
-		to. A day takes the colour of its busiest source, and the music counts only on the days with
-		nothing else. Pick a source to see it alone, right click it to hide it, or pick a day to see
-		what happened.
-	</p>
+  <p class="section__intro">
+    Everything I do in public, one square per day: code, posts, ATProto apps and the music I listen
+    to. A day takes the colour of its busiest source, and the music counts only on the days with
+    nothing else. Pick one or more sources to see only them, right click a source to hide it, or
+    pick a day to see what happened.
+  </p>
 
-	{#if data.activity.calendar}
-		<ActivityCalendar calendar={data.activity.calendar} today={data.activity.today} />
-	{:else}
-		<p class="empty">The activity calendar is offline. It should be back within the hour.</p>
-	{/if}
+  {#if data.activity.calendar}
+    <ActivityCalendar calendar={data.activity.calendar} today={data.activity.today} />
+  {:else}
+    <p class="empty">The activity calendar is offline. It should be back within the hour.</p>
+  {/if}
 </section>
 
 <style lang="scss">
